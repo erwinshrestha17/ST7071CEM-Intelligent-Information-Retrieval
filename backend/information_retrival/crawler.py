@@ -2,92 +2,92 @@
 
 import json
 import logging
-import re
-import time
-import random
 from urllib.parse import urljoin
+import time
 
 import undetected_chromedriver as uc
 from bs4 import BeautifulSoup
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+from backend.information_retrival.config import START_URL, BASE_URL, PUBLICATIONS_FILE
+
 # Import configuration from the config module
-from .config import BASE_URL, START_URL, PUBLICATIONS_FILE
+
 
 # Centralize logging configuration
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-# Selectors for both listing and detail pages
+# Selectors for listing pages and detail pages
 SELECTORS = {
     "publication_link": "h3.title a",
-    "pagination_current": "span.currentStep",
-    "title": "h1.title",
-    "authors": "a.link.person",
-    "date": "span.date",
-    "details_content": ".rendering_content",
-    "abstract_container": "div.rendering_abstract div.textblock"
+    "pagination_next": "a.next",
+    # --- Selectors for the publication detail page (these are educated guesses) ---
+    "detail_title": "div.rendering h1",
+    "detail_authors": "p.relations.authors a.link.person",
+    "detail_year": "span.date",
+    "detail_abstract": "div.textblock"
 }
 
 
 def get_driver():
     """Initializes and returns a configured undetected_chromedriver instance."""
     options = uc.ChromeOptions()
-    # options.add_argument('--headless') # Keep commented for debugging
+    # options.add_argument('--headless') # Can be enabled for production runs
     options.add_argument("--start-maximized")
     return uc.Chrome(options=options)
 
 
-def extract_all_publication_data(url, driver):
-    """
-    Visits a single publication page and extracts ALL relevant data.
-    """
-    pub_data = {
-        "title": None, "publicationUrl": url, "authors": [],
-        "authorProfileUrl": None, "publicationYear": None, "abstract": None
-    }
+def extract_publication_details(driver, url):
+    """Visits a single publication URL and extracts its details."""
     try:
         driver.get(url)
-        WebDriverWait(driver, 30).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, SELECTORS["details_content"])))
+        # Wait for a key element like the title to be present
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, SELECTORS["detail_title"]))
+        )
+        time.sleep(0.5)  # Small delay to allow dynamic content to load
 
-        soup = BeautifulSoup(driver.page_source, 'html.parser')
+        title = driver.find_element(By.CSS_SELECTOR, SELECTORS["detail_title"]).text
+        authors = [elem.text for elem in driver.find_elements(By.CSS_SELECTOR, SELECTORS["detail_authors"])]
 
-        title_tag = soup.select_one(SELECTORS["title"])
-        if title_tag:
-            pub_data["title"] = title_tag.get_text(strip=True)
+        # Use try-except for optional fields
+        try:
+            year_text = driver.find_element(By.CSS_SELECTOR, SELECTORS["detail_year"]).text
+            # Extract the year (e.g., from "Dec 2023")
+            publicationYear = int(year_text.split()[-1])
+        except (NoSuchElementException, ValueError, IndexError):
+            publicationYear = None
 
-        authors_tags = soup.select(SELECTORS["authors"])
-        if authors_tags:
-            pub_data["authors"] = [a.get_text(strip=True) for a in authors_tags]
-            pub_data["authorProfileUrl"] = urljoin(BASE_URL, authors_tags[0]['href'])
+        try:
+            abstract = driver.find_element(By.CSS_SELECTOR, SELECTORS["detail_abstract"]).text
+        except NoSuchElementException:
+            abstract = None
 
-        year_tag = soup.select_one(SELECTORS["date"])
-        if year_tag:
-            year_match = re.search(r'\d{4}', year_tag.get_text(strip=True))
-            if year_match:
-                pub_data["publicationYear"] = int(year_match.group())
-
-        abstract_tag = soup.select_one(SELECTORS["abstract_container"])
-        if abstract_tag:
-            pub_data["abstract"] = abstract_tag.get_text(separator="\n", strip=True)
-
+        return {
+            "title": title,
+            "publicationUrl": url,
+            "authors": authors,
+            "publicationYear": publicationYear,
+            "abstract": abstract,
+        }
     except TimeoutException:
-        logging.warning(f"Timeout waiting for details page to load: {url}")
+        logging.error(f"Timeout while waiting for details on page: {url}")
+        return None
     except Exception as e:
-        logging.error(f"Error extracting details from {url}: {e}")
-
-    return pub_data
+        logging.error(f"Failed to extract details from {url}: {e}")
+        return None
 
 
 def crawl_and_extract():
     """
-    Crawls the university portal page-by-page, collects all publication URLs,
-    then visits each URL to extract its full data.
+    Performs a two-step crawl:
+    1. Collects all unique publication URLs from paginated listing pages.
+    2. Visits each collected URL to extract detailed publication information.
     """
-    logging.info("--- Initializing browser for crawling process ---")
+    logging.info("--- Initializing browser ---")
     driver = get_driver()
     publication_urls = []
     visited_urls = set()
@@ -97,10 +97,9 @@ def crawl_and_extract():
         logging.info("--- Starting Step 1: Collecting publication URLs ---")
         current_url = START_URL
         while current_url:
-            logging.info(f"Scanning listing page: {current_url.split('/')[-1] or 'page=0'}")
+            logging.info(f"Scanning listing page: {current_url}")
             driver.get(current_url)
 
-            # Use a short wait for the results to be present
             WebDriverWait(driver, 15).until(
                 EC.presence_of_element_located((By.CSS_SELECTOR, SELECTORS["publication_link"])))
 
@@ -115,43 +114,39 @@ def crawl_and_extract():
                         publication_urls.append(full_url)
                         visited_urls.add(full_url)
                         new_links_found += 1
-            logging.info(f"-> Found {new_links_found} new publication URLs.")
+            logging.info(f"-> Found {new_links_found} new publication URLs on this page.")
 
-            # Robust pagination logic
+            # More robust pagination logic using a "next" button selector
             try:
-                current_page_element = driver.find_element(By.CSS_SELECTOR, SELECTORS["pagination_current"])
-                parent_li = current_page_element.find_element(By.XPATH, "./parent::li")
-                next_li = parent_li.find_element(By.XPATH, "./following-sibling::li")
-                next_page_link = next_li.find_element(By.TAG_NAME, "a")
+                next_page_link = driver.find_element(By.CSS_SELECTOR, SELECTORS["pagination_next"])
                 current_url = next_page_link.get_attribute('href')
             except NoSuchElementException:
-                logging.info("No more pages found. URL collection finished.")
+                logging.info("No 'next' page link found. URL collection finished.")
                 current_url = None
 
-        logging.info(f"--- Step 1 complete. Found a total of {len(publication_urls)} URLs. ---")
+        logging.info(f"--- Step 1 complete. Found a total of {len(publication_urls)} unique URLs. ---")
 
-        # --- Step 2: Extract details for each unique URL ---
-        logging.info("--- Starting Step 2: Extracting publication details ---")
+        # --- Step 2: Extract details for each publication ---
+        logging.info("--- Starting Step 2: Extracting publication details for each URL ---")
         all_publications = []
-        for i, url in enumerate(publication_urls):
-            logging.info(f"Processing URL {i + 1}/{len(publication_urls)}: {url.split('/')[-1]}")
+        for i, url in enumerate(publication_urls, 1):
+            details = extract_publication_details(driver, url)
+            if details:
+                all_publications.append(details)
 
-            sleep_time = random.uniform(2, 5)  # Polite delay
-            logging.info(f"  Waiting for {sleep_time:.2f} seconds...")
-            time.sleep(sleep_time)
+            # Log progress periodically
+            if i % 25 == 0 or i == len(publication_urls):
+                logging.info(f"Processed {i}/{len(publication_urls)} publications.")
 
-            data = extract_all_publication_data(url, driver)
-            if data.get("title"):
-                all_publications.append(data)
-        logging.info("--- Step 2 complete. ---")
+        logging.info(
+            f"--- Step 2 complete. Successfully extracted details for {len(all_publications)} publications. ---")
 
     finally:
         logging.info("--- Closing browser ---")
         driver.quit()
 
     # --- Save results ---
-    logging.info(f"Crawling complete. Writing {len(all_publications)} publications to file.")
-    # The output is a list of objects, which is a standard JSON format
+    logging.info(f"Saving {len(all_publications)} complete publication records to file.")
     with open(PUBLICATIONS_FILE, 'w', encoding='utf-8') as f:
         json.dump(all_publications, f, indent=4, ensure_ascii=False)
 
