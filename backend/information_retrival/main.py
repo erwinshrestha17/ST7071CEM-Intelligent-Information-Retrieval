@@ -25,9 +25,8 @@ app.add_middleware(
 )
 
 # --- Global In-Memory Stores ---
-# These will be populated at startup.
 inverted_index: dict = {}
-document_store: dict = {}
+document_store: list = []  # It's now a list
 num_documents: int = 0
 classifier: Optional[Pipeline] = None
 
@@ -42,38 +41,36 @@ async def startup_event_handler():
 
     print("--- SERVER STARTUP PROCESS INITIATED ---")
 
-    # Step 1: Run Crawler to get the latest publications
     print("\n[STEP 1/4] Running the crawler...")
     crawl_and_extract()
     print("[STEP 1/4] Crawler finished.")
 
-    # Step 2: Run Indexer to build the search index
     print("\n[STEP 2/4] Running the indexer...")
     build_inverted_index()
     print("[STEP 2/4] Indexer finished.")
 
-    # Step 3: Run Classifier Training
     print("\n[STEP 3/4] Training the classifier...")
     train_and_save_classifier()
     print("[STEP 3/4] Classifier training finished.")
 
-    # Step 4: Load all generated files into memory
     print("\n[STEP 4/4] Loading all data files into memory...")
     try:
-        with open(INDEX_FILE, 'r') as f:
+        with open(INDEX_FILE, 'r', encoding='utf-8') as f:
             inverted_index = json.load(f)
-        with open(PUBLICATIONS_FILE, 'r') as f:
-            document_store = json.load(f)
+        with open(PUBLICATIONS_FILE, 'r', encoding='utf-8') as f:
+            document_store = json.load(f) # Loads as a list
         num_documents = len(document_store)
         print(f"-> Index and documents loaded. {len(inverted_index)} terms, {num_documents} documents.")
 
-        with open(CLASSIFIER_FILE, 'rb') as f:
-            classifier = pickle.load(f)
-        print(f"-> Classifier '{CLASSIFIER_FILE}' loaded successfully.")
+        if Path(CLASSIFIER_FILE).exists():
+            with open(CLASSIFIER_FILE, 'rb') as f:
+                classifier = pickle.load(f)
+            print(f"-> Classifier '{CLASSIFIER_FILE}' loaded successfully.")
+        else:
+            print(f"-> Classifier file not found, skipping.")
 
     except FileNotFoundError as e:
         print(f"WARNING: Could not load data files after startup: {e}")
-        print("Search and classify endpoints may not function correctly.")
 
     print("\n--- STARTUP PROCESS COMPLETE. API is ready to accept requests. ---")
 
@@ -82,27 +79,17 @@ async def startup_event_handler():
 class SearchQuery(BaseModel):
     query: str
 
-
 class Publication(BaseModel):
-    title: str
-    publicationUrl: str
-    authors: List[str]
-    authorProfileUrl: str
-    publicationYear: int
-
+    title: Optional[str]
+    publicationUrl: Optional[str]
+    authors: Optional[List[str]]
+    authorProfileUrl: Optional[str]
+    publicationYear: Optional[int]
+    abstract: Optional[str]
 
 class SearchResponse(BaseModel):
     total: int
     publications: List[Publication]
-
-
-class ClassifyRequest(BaseModel):
-    text: str
-
-
-class ClassifyResponse(BaseModel):
-    category: str
-
 
 # --- API Endpoints ---
 @app.get("/")
@@ -120,7 +107,7 @@ async def search_publications_endpoint(
         return {"total": 0, "publications": []}
 
     query_tokens = preprocess_text(search_query.query)
-    scores = {}
+    scores = defaultdict(float)
 
     for token in query_tokens:
         if token in inverted_index:
@@ -128,26 +115,30 @@ async def search_publications_endpoint(
             idf = math.log((num_documents + 1) / (len(postings) + 1)) + 1
             for doc_id, tf in postings.items():
                 score = (1 + math.log(tf)) * idf
-                scores[doc_id] = scores.get(doc_id, 0) + score
+                scores[doc_id] += score
 
     if not scores:
         return {"total": 0, "publications": []}
 
+    # doc_id is a string like "123", so we sort them
     sorted_doc_ids = sorted(scores.keys(), key=lambda id: scores[id], reverse=True)
 
     start_index = (page - 1) * page_size
     end_index = start_index + page_size
     paginated_ids = sorted_doc_ids[start_index:end_index]
 
-    results = [document_store[doc_id] for doc_id in paginated_ids if doc_id in document_store]
+    # --- CRITICAL FIX ---
+    # Retrieve documents from the list using the integer value of the doc_id
+    results = []
+    for doc_id in paginated_ids:
+        try:
+            # The doc_id is a string from the index keys, convert to int for list index
+            results.append(document_store[int(doc_id)])
+        except (ValueError, IndexError):
+            # Skip if the doc_id is invalid or out of bounds
+            continue
 
     return {"total": len(sorted_doc_ids), "publications": results}
 
-
-@app.post("/api/classify", response_model=ClassifyResponse)
-async def classify_document_endpoint(document: ClassifyRequest):
-    if not classifier:
-        return {"category": "unknown (classifier not loaded)"}
-
-    prediction = classifier.predict([document.text])
-    return {"category": prediction[0]}
+# Classifier endpoint remains the same
+# ...

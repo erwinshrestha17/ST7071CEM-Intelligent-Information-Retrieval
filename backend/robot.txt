@@ -1,0 +1,6 @@
+User-Agent: *
+Crawl-Delay: 5
+Disallow: /*?*format=rss
+Disallow: /*?*export=xls
+
+Sitemap: https://pureportal.coventry.ac.uk/sitemap.xml
