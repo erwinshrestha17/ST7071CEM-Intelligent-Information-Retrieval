@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+pydantic
+python-cors
+nltk
+schedule
+beautifulsoup4
+selenium
+webdriver-manager
+scikit-learn
