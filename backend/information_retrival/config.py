@@ -1,18 +1,18 @@
-# backend/config.py
+# backend/information_retrival/config.py
 
 from pathlib import Path
 
-# This gives us the project root directory
-ROOT_DIR = Path(__file__).parent.parent
+# --- Project Root ---
+# This assumes the script is run from the project's root directory
+# or that this file is two levels down from the root (e.g., backend/information_retrival/)
+PROJECT_ROOT = Path(__file__).parent.parent.parent
 
 # --- File Paths ---
-# Use .joinpath() for creating full paths and ensure they are strings for compatibility
-PUBLICATIONS_FILE = str(ROOT_DIR.joinpath("publications.json"))
-INDEX_FILE = str(ROOT_DIR.joinpath("inverted_index.json"))
-LABELED_DATA_FILE = str(ROOT_DIR.joinpath("labeled_data.json"))
-CLASSIFIER_FILE = str(ROOT_DIR.joinpath("publication_classifier.pkl"))
+PUBLICATIONS_FILE = PROJECT_ROOT / "publications.json"
+INDEX_FILE = PROJECT_ROOT / "search_index.json"
+CLASSIFIER_FILE = PROJECT_ROOT / "title_classifier.pkl"
+LABELED_DATA_FILE = PROJECT_ROOT / "labeled_data.json" # Assumed path for labeled data
 
 # --- Crawler Configuration ---
-# This is the starting point for our page-by-page crawler
 START_URL = "https://pureportal.coventry.ac.uk/en/organisations/fbl-school-of-economics-finance-and-accounting/publications/"
 BASE_URL = "https://pureportal.coventry.ac.uk"

@@ -1,10 +1,10 @@
 fastapi
 uvicorn[standard]
 pydantic
-python-cors
-nltk
-schedule
+requests
 beautifulsoup4
 selenium
-webdriver-manager
+undetected-chromedriver
 scikit-learn
+nltk
+schedule

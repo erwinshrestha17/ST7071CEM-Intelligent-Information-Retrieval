@@ -1,7 +1,8 @@
-# backend/train_classifier.py
+# backend/information_retrival/train_classifier.py
 
 import json
 import pickle
+import nltk
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import make_pipeline
@@ -11,6 +12,7 @@ from .preprocessing import preprocess_text
 from .config import LABELED_DATA_FILE, CLASSIFIER_FILE
 
 def custom_analyzer(text):
+    # ... (rest of the file is identical to your version, no changes needed)
     """Custom analyzer for TfidfVectorizer that uses our preprocessor."""
     return preprocess_text(text)
 
@@ -34,7 +36,7 @@ def train_and_save_classifier():
         MultinomialNB()
     )
 
-    print("Training classifier model...")
+    print(f"Training classifier model on {len(titles)} documents...")
     model_pipeline.fit(titles, categories)
     print("Training complete.")
 
@@ -44,4 +46,18 @@ def train_and_save_classifier():
     print(f"Classifier model saved to {CLASSIFIER_FILE}")
 
 if __name__ == "__main__":
+    # Ensure NLTK data is available if run standalone
+    # This check is now also present inside preprocessing.py
+    try:
+        nltk.data.find('tokenizers/punkt')
+        nltk.data.find('corpora/stopwords')
+        nltk.data.find('corpora/wordnet')
+        nltk.data.find('corpora/omw-1.4')
+    except nltk.downloader.DownloadError:
+        print("Downloading necessary NLTK data for preprocessing...")
+        nltk.download('punkt')
+        nltk.download('stopwords')
+        nltk.download('wordnet')
+        nltk.download('omw-1.4')
+
     train_and_save_classifier()
