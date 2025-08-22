@@ -1,85 +1,100 @@
 # backend/main.py
 
 import json
+import csv
+import ast
 from typing import List, Optional
 from pathlib import Path
 from fastapi import FastAPI, Query, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from fastapi.middleware.cors import CORSMiddleware
-from sklearn.pipeline import Pipeline
-import pickle
 from collections import defaultdict
+from datetime import datetime
 
-# Import our own modules
-from backend.information_retrival.config import INDEX_FILE, PUBLICATIONS_FILE, CLASSIFIER_FILE
-from backend.information_retrival.preprocessing import preprocess_text
+# Local module imports
+from backend.crawling.config import INDEX_FILE, PUBLICATIONS_FILE
+from backend.crawling.preprocessing import preprocess_text
 
 # --- App and CORS Setup ---
 app = FastAPI(title="Publication Search API", version="1.0.0")
-origins = ["http://localhost:3000", "http://localhost:5173"]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins, allow_credentials=True, allow_methods=["*"], allow_headers=["*"],
+    allow_origins=["http://localhost:3000", "http://localhost:5173"],
+    allow_credentials=True, allow_methods=["*"], allow_headers=["*"],
 )
 
 # --- Global In-Memory Stores ---
 index_data: dict = {}
 document_metadata: dict = {}
 document_store: list = []
-classifier: Optional[Pipeline] = None
 
 
-# --- Startup Event Handler ---
 @app.on_event("startup")
 async def startup_event_handler():
-    """Loads pre-built index, metadata, documents, and classifier into memory."""
-    global index_data, document_metadata, document_store, classifier
-    print("--- SERVER STARTUP: Loading data files into memory... ---")
-
+    """Loads and pre-processes data files into memory on server start."""
+    global index_data, document_metadata, document_store
+    print("--- SERVER STARTUP: Loading data... ---")
     try:
         with open(INDEX_FILE, 'r', encoding='utf-8') as f:
             full_index = json.load(f)
             index_data = full_index.get('index', {})
             document_metadata = full_index.get('metadata', {})
+        print(f"-> Index loaded with {len(index_data)} terms.")
 
         with open(PUBLICATIONS_FILE, 'r', encoding='utf-8') as f:
-            document_store = json.load(f)
+            reader = csv.DictReader(f)
+            for row in reader:
+                try:
+                    authors_str = row.get('authors', '[]')
+                    authors_data = json.loads(authors_str)
 
-        print(f"-> Index and metadata loaded. {len(index_data)} terms, {len(document_metadata)} documents.")
+                    if authors_data and isinstance(authors_data[0], dict):
+                        row['authors'] = [author.get('name', '') for author in authors_data]
+                    else:
+                        row['authors'] = authors_data
+                except (json.JSONDecodeError, TypeError):
+                    row['authors'] = []
 
-        if Path(CLASSIFIER_FILE).exists():
-            with open(CLASSIFIER_FILE, 'rb') as f:
-                classifier = pickle.load(f)
-            print(f"-> Classifier '{CLASSIFIER_FILE}' loaded.")
-        else:
-            print("-> Classifier file not found, skipping.")
+                pub_year = None
+                date_str = row.get('date', '').strip().replace('Sept', 'Sep')
+                if date_str:
+                    possible_formats = ['%d %b %Y', '%b %Y', '%Y']
+                    for fmt in possible_formats:
+                        try:
+                            pub_year = datetime.strptime(date_str, fmt).year
+                            break
+                        except ValueError:
+                            continue
 
-    except FileNotFoundError as e:
-        print(f"WARNING: Critical data file not found: {e}. API may not function correctly.")
+                row['publicationYear'] = pub_year
+                document_store.append(row)
 
+        print(f"-> Publications data loaded with {len(document_store)} documents.")
+    except Exception as e:
+        print(f"FATAL ERROR during startup: {e}. API may not function.")
     print("--- STARTUP COMPLETE. API is ready. ---")
 
 
 # --- API Models ---
+class SearchRequest(BaseModel):
+    query: str
+
+
 class Publication(BaseModel):
     title: Optional[str] = None
-    publicationUrl: Optional[str] = None
+    publication_url: Optional[str] = Field(None, alias='publication_link')
     authors: Optional[List[str]] = None
-    publicationYear: Optional[int] = None
+    publication_year: Optional[int] = Field(None, alias='publicationYear')
     abstract: Optional[str] = None
+
+    class Config:
+        # MODIFICATION: Updated 'orm_mode' to 'from_attributes' to remove warning
+        from_attributes = True
 
 
 class SearchResponse(BaseModel):
     total: int
     publications: List[Publication]
-
-
-class ClassifyRequest(BaseModel):
-    text: str
-
-
-class ClassifyResponse(BaseModel):
-    category: str
 
 
 # --- API Endpoints ---
@@ -90,72 +105,46 @@ def read_root():
 
 @app.post("/api/search", response_model=SearchResponse)
 async def search_publications(
-        query: str,
-        page: int = 1,
-        page_size: int = Query(10, ge=1, le=100),
-        min_year: Optional[int] = None,
-        max_year: Optional[int] = None
+        request: SearchRequest,
+        page: int = 1, page_size: int = Query(10, ge=1, le=100),
+        min_year: Optional[int] = None, max_year: Optional[int] = None
 ):
-    """
-    Performs a search query against the index, with support for filtering and pagination.
-    """
     if not index_data or not document_store:
-        raise HTTPException(status_code=503, detail="Search index is not available.")
+        raise HTTPException(status_code=503, detail="Search index not available.")
 
-    query_tokens = preprocess_text(query)
+    query_tokens = preprocess_text(request.query)
     scores = defaultdict(float)
 
-    # 1. Calculate TF-IDF scores for all documents matching query terms
     for token in query_tokens:
         if token in index_data:
             term_info = index_data[token]
             idf = term_info.get('idf', 1.0)
             for doc_id, tf in term_info['postings'].items():
-                # Correct scoring: normalized TF * IDF
                 scores[doc_id] += tf * idf
 
     if not scores:
-        return {"total": 0, "publications": []}
+        return SearchResponse(total=0, publications=[])
 
-    # 2. Filter the scored documents by year using the efficient metadata lookup
     if min_year or max_year:
         filtered_doc_ids = []
         for doc_id in scores:
             meta = document_metadata.get(doc_id)
-            if not meta or 'year' not in meta or meta['year'] is None:
+            if not meta or meta.get('year') is None:
                 continue
-
             pub_year = meta['year']
-            if min_year and pub_year < min_year:
-                continue
-            if max_year and pub_year > max_year:
+            if (min_year and pub_year < min_year) or (max_year and pub_year > max_year):
                 continue
             filtered_doc_ids.append(doc_id)
     else:
         filtered_doc_ids = list(scores.keys())
 
-    # 3. Sort the filtered documents by score
     sorted_doc_ids = sorted(filtered_doc_ids, key=lambda id: scores[id], reverse=True)
 
-    # 4. Paginate the results
     total_results = len(sorted_doc_ids)
     start_index = (page - 1) * page_size
     end_index = start_index + page_size
     paginated_ids = sorted_doc_ids[start_index:end_index]
 
-    # 5. Retrieve full document data for the paginated page
-    results = [document_store[int(doc_id)] for doc_id in paginated_ids if
-               doc_id.isdigit() and int(doc_id) < len(document_store)]
+    results = [document_store[int(doc_id)] for doc_id in paginated_ids]
 
-    return {"total": total_results, "publications": results}
-
-
-@app.post("/api/classify", response_model=ClassifyResponse)
-async def classify_document(request: ClassifyRequest):
-    if not classifier:
-        raise HTTPException(status_code=503, detail="Classifier is not available.")
-    try:
-        prediction = classifier.predict([request.text])
-        return {"category": prediction[0]}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Classification error: {e}")
+    return SearchResponse(total=total_results, publications=results)

@@ -1,4 +1,4 @@
-# backend/information_retrival/preprocessing.py
+# backend/crawling/preprocessing.py
 
 import nltk
 from nltk.corpus import stopwords
