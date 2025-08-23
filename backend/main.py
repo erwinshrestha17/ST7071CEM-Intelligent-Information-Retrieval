@@ -11,9 +11,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from collections import defaultdict
 from datetime import datetime
 import traceback
+from pathlib import Path  # Import Path for robust path handling
 
 # Local module imports
-from backend.config import INDEX_FILE, PUBLICATIONS_FILE, CLASSIFIER_FILE, VECTORIZER_FILE
+# MODIFICATION: Removed unused config imports for classifier files
+from backend.config import INDEX_FILE, PUBLICATIONS_FILE
 from backend.crawling.crawler_preprocessing import preprocess_text as preprocess_for_search
 from backend.classification.classification_preprocessing import preprocess_text as preprocess_for_classification
 
@@ -35,7 +37,6 @@ vectorizer = None
 
 @app.on_event("startup")
 async def startup_event_handler():
-    # ... (this function remains the same)
     """Loads and pre-processes data files into memory on server start."""
     global index_data, document_metadata, document_store, classifier, vectorizer
     print("--- SERVER STARTUP: Loading data... ---")
@@ -74,16 +75,23 @@ async def startup_event_handler():
                 document_store.append(row)
         print(f"-> Publications data loaded with {len(document_store)} documents.")
 
-        # Load the classifier and vectorizer
-        print("-> Loading classifier and vectorizer...")
+        # --- MODIFICATION: Load the CORRECT Naive Bayes model files ---
+        # The paths are relative to the project root where uvicorn is running.
+        CLASSIFIER_FILE = Path("backend/classification/naive_bayes_classifier.pkl")
+        VECTORIZER_FILE = Path("backend/classification/tfidf_vectorizer_nb.pkl")
+
+        print(f"-> Loading classifier from: {CLASSIFIER_FILE}")
+        print(f"-> Loading vectorizer from: {VECTORIZER_FILE}")
+
         with open(CLASSIFIER_FILE, 'rb') as f:
             classifier = pickle.load(f)
         with open(VECTORIZER_FILE, 'rb') as f:
             vectorizer = pickle.load(f)
-        print("-> Classifier and vectorizer loaded successfully.")
+        print("-> Naive Bayes classifier and vectorizer loaded successfully.")
 
     except Exception as e:
         print(f"FATAL ERROR during startup: {e}. API may not function.")
+        traceback.print_exc()  # Print full error for debugging
     print("--- STARTUP COMPLETE. API is ready. ---")
 
 
@@ -112,7 +120,6 @@ class ClassificationRequest(BaseModel):
     text: str = Field(..., min_length=10, description="Text to be classified.")
 
 
-# --- MODIFIED: Simplified the response model to fix the validation error ---
 class ClassificationResponse(BaseModel):
     predicted_category: str
     confidence_score: float
@@ -126,7 +133,6 @@ def read_root():
 
 @app.post("/api/classify", response_model=ClassificationResponse)
 async def classify_text(request: ClassificationRequest):
-    # ... (this function remains the same)
     """
     Classifies the given text into a predefined category.
     """
@@ -136,13 +142,8 @@ async def classify_text(request: ClassificationRequest):
         )
 
     try:
-        # 1. Preprocess the input text using the correct function
         processed_text = preprocess_for_classification(request.text)
-
-        # 2. Vectorize the text using the loaded TF-IDF vectorizer
         vectorized_text = vectorizer.transform([processed_text])
-
-        # 3. Predict the category and the confidence score
         predicted_category = classifier.predict(vectorized_text)[0]
         probabilities = classifier.predict_proba(vectorized_text)[0]
         confidence = float(np.max(probabilities))
@@ -161,7 +162,6 @@ async def classify_text(request: ClassificationRequest):
 
 @app.post("/api/search", response_model=SearchResponse)
 async def search_publications(
-    # ... (this function remains the same)
         request: SearchRequest,
         page: int = 1, page_size: int = Query(10, ge=1, le=100),
         min_year: Optional[int] = None, max_year: Optional[int] = None
@@ -169,7 +169,6 @@ async def search_publications(
     if not index_data or not document_store:
         raise HTTPException(status_code=503, detail="Search index not available.")
 
-    # Use the correct preprocessing function for search
     query_tokens = preprocess_for_search(request.query)
     scores = defaultdict(float)
 

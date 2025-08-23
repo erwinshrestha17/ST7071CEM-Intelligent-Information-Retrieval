@@ -12,8 +12,8 @@ INDEX_FILE = PROJECT_ROOT / "backend/search_index.json"
 LABELED_DATA_FILE = PROJECT_ROOT / "backend/labeled_data.json"
 
 # --- Model & Vectorizer Paths ---
-CLASSIFIER_FILE = PROJECT_ROOT / "backend/title_classifier.pkl"
-VECTORIZER_FILE = PROJECT_ROOT / "backend/tfidf_vectorizer.pkl" # <-- ADDED
+CLASSIFIER_FILE = PROJECT_ROOT / "backend/classification/naive_bayes_classifier.pkl"
+VECTORIZER_FILE = PROJECT_ROOT / "backend/classification/tfidf_vectorizer.pkl"
 
 # --- Crawler Configuration ---
 COVENTRY_PUREPORTAL_URL = "https://pureportal.coventry.ac.uk/en/organisations/fbl-school-of-economics-finance-and-accounting/publications"

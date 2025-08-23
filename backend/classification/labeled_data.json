@@ -943,5 +943,374 @@
     "source": "NPR",
     "url": "https://www.npr.org/politics",
     "summary": "This article summarizes the key highlights and significant moments from the opening night of the Republican National Convention."
+  },
+  {
+    "title": "Global markets brace for impact of new EU carbon tariff",
+    "category": "Economy",
+    "author": "Reuters",
+    "date": "2025-08-23",
+    "source": "Reuters",
+    "url": "https://www.reuters.com/business/",
+    "summary": "International markets are preparing for the economic consequences of the European Union's new carbon border adjustment mechanism, which imposes a tariff on certain imports."
+  },
+  {
+    "title": "Venture capital funding for AI startups hits record high in Q3",
+    "category": "Technology",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "TechCrunch",
+    "url": "https://techcrunch.com/",
+    "summary": "Investment in artificial intelligence startups reached an all-time high in the third quarter of 2025, signaling strong investor confidence in the sector's future growth."
+  },
+  {
+    "title": "Major automaker to phase out all gasoline vehicles by 2035",
+    "category": "Automotive",
+    "author": "Associated Press",
+    "date": "2025-08-23",
+    "source": "Associated Press",
+    "url": "https://apnews.com/hub/business",
+    "summary": "A leading global car manufacturer has announced its commitment to cease production of all gasoline-powered vehicles by the year 2035, shifting entirely to electric models."
+  },
+  {
+    "title": "Shipping giant Maersk invests in new fleet of methanol-powered vessels",
+    "category": "Logistics",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Bloomberg",
+    "url": "https://www.bloomberg.com/business",
+    "summary": "In a significant move towards decarbonization, shipping company Maersk has placed a large order for a new fleet of container ships that will run on green methanol."
+  },
+  {
+    "title": "Central bank digital currency pilot program expands to include commercial transactions",
+    "category": "Finance",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Wall Street Journal",
+    "url": "https://www.wsj.com/business",
+    "summary": "The pilot program for a US central bank digital currency (CBDC) is being expanded to test its use in commercial and retail transactions, moving beyond interbank settlements."
+  },
+  {
+    "title": "Amazon to build three new major fulfillment centers in the Midwest",
+    "category": "E-commerce",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "CNBC",
+    "url": "https://www.cnbc.com/business/",
+    "summary": "Amazon has announced plans to construct three new large-scale fulfillment centers across the Midwestern United States to enhance its logistics and delivery network."
+  },
+  {
+    "title": "US retail sales unexpectedly decline in July amid inflation concerns",
+    "category": "Economy",
+    "author": "Reuters",
+    "date": "2025-08-23",
+    "source": "Reuters",
+    "url": "https://www.reuters.com/business/",
+    "summary": "Retail sales in the United States saw a surprising drop in July, as consumers pulled back on spending in the face of persistent inflation and economic uncertainty."
+  },
+  {
+    "title": "Microsoft closes $15 billion acquisition of cybersecurity firm SentinelOne",
+    "category": "Technology",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Verge",
+    "url": "https://www.theverge.com/tech",
+    "summary": "Microsoft has completed its acquisition of cybersecurity company SentinelOne for $15 billion, bolstering its security offerings for enterprise customers."
+  },
+  {
+    "title": "Global food prices rise for the third consecutive month, says UN agency",
+    "category": "Economy",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "United Nations",
+    "url": "https://news.un.org/",
+    "summary": "The Food and Agriculture Organization of the United Nations has reported that global food prices increased for the third straight month, driven by rising costs for grains and vegetable oils."
+  },
+  {
+    "title": "Tesla announces new, lower-cost Model 2 for European market",
+    "category": "Automotive",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Reuters",
+    "url": "https://www.reuters.com/business/autos-transportation/",
+    "summary": "Tesla has officially unveiled its new, more affordable Model 2 electric vehicle, which will be specifically targeted at the European market to compete with local manufacturers."
+  },
+  {
+    "title": "Disney reports strong subscriber growth for its streaming services",
+    "category": "Entertainment",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Variety",
+    "url": "https://variety.com/",
+    "summary": "The Walt Disney Company has exceeded analyst expectations by reporting robust subscriber growth for its Disney+, Hulu, and ESPN+ streaming platforms in its latest quarterly earnings."
+  },
+  {
+    "title": "UK government announces new North Sea oil and gas exploration licenses",
+    "category": "Energy",
+    "author": "BBC News",
+    "date": "2025-08-23",
+    "source": "BBC News",
+    "url": "https://www.bbc.com/news/business",
+    "summary": "The UK government has approved a new round of oil and gas exploration licenses for the North Sea, a decision that has drawn criticism from environmental groups."
+  },
+  {
+    "title": "German manufacturing orders slump, signaling potential recession",
+    "category": "Economy",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Financial Times",
+    "url": "https://www.ft.com/world/europe",
+    "summary": "New data shows a sharp decline in manufacturing orders in Germany, raising concerns that Europe's largest economy may be heading towards a recession."
+  },
+  {
+    "title": "Starbucks to close an additional 150 underperforming stores in the US",
+    "category": "Retail",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "CNN Business",
+    "url": "https://www.cnn.com/business",
+    "summary": "Starbucks has announced its intention to close an additional 150 company-operated stores in the United States that have been underperforming."
+  },
+  {
+    "title": "EU Parliament votes to advance landmark AI regulation bill",
+    "category": "Government Policy",
+    "author": "Reuters",
+    "date": "2025-08-23",
+    "source": "Reuters",
+    "url": "https://www.reuters.com/world/europe/",
+    "summary": "The European Parliament has passed a key vote to move forward with the AI Act, a comprehensive piece of legislation designed to regulate the use of artificial intelligence."
+  },
+  {
+    "title": "US and China to resume high-level diplomatic talks next month",
+    "category": "International Relations",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The New York Times",
+    "url": "https://www.nytimes.com/politics/",
+    "summary": "Officials from the United States and China have agreed to resume high-level diplomatic discussions in an effort to ease ongoing tensions between the two countries."
+  },
+  {
+    "title": "UK Prime Minister announces snap general election for October",
+    "category": "UK Politics",
+    "author": "BBC News",
+    "date": "2025-08-23",
+    "source": "BBC News",
+    "url": "https://www.bbc.com/news/politics",
+    "summary": "In a surprise announcement, the UK Prime Minister has called a snap general election, with the vote scheduled to take place in October."
+  },
+  {
+    "title": "German Chancellor faces no-confidence vote over new energy policy",
+    "category": "European Politics",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Deutsche Welle",
+    "url": "https://www.dw.com/en/politics/s-11859",
+    "summary": "The German Chancellor is facing a vote of no confidence in the Bundestag following widespread opposition to the government's controversial new energy policy."
+  },
+  {
+    "title": "African Union leaders meet to discuss new regional trade agreement",
+    "category": "International Relations",
+    "author": "Al Jazeera",
+    "date": "2025-08-23",
+    "source": "Al Jazeera",
+    "url": "https://www.aljazeera.com/politics/",
+    "summary": "Leaders from across the African Union have convened for a summit to finalize the details of a new continent-wide free trade agreement."
+  },
+  {
+    "title": "White House unveils new national cybersecurity policy",
+    "category": "Government Policy",
+    "author": "Associated Press",
+    "date": "2025-08-23",
+    "source": "Associated Press",
+    "url": "https://apnews.com/hub/politics",
+    "summary": "The White House has released a new national cybersecurity policy that introduces stricter regulations for critical infrastructure and government agencies."
+  },
+  {
+    "title": "UN Security Council to hold emergency session on humanitarian crisis",
+    "category": "International Relations",
+    "author": "Reuters",
+    "date": "2025-08-23",
+    "source": "Reuters",
+    "url": "https://www.reuters.com/world/",
+    "summary": "The United Nations Security Council will convene for an emergency meeting to address the escalating humanitarian crisis in the conflict-ridden region."
+  },
+  {
+    "title": "New legislation aims to reform US campaign finance laws",
+    "category": "US Politics",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Hill",
+    "url": "https://thehill.com/politics",
+    "summary": "A bipartisan group of senators has introduced new legislation aimed at overhauling the nation's campaign finance laws to increase transparency and reduce the influence of dark money."
+  },
+  {
+    "title": "WHO announces new global pandemic preparedness treaty",
+    "category": "Global Health Policy",
+    "author": "WHO",
+    "date": "2025-08-23",
+    "source": "WHO",
+    "url": "https://www.who.int/news",
+    "summary": "The World Health Organization has unveiled a new international treaty aimed at improving global cooperation and preparedness for future pandemics."
+  },
+  {
+    "title": "FDA grants full approval to new Alzheimer's drug",
+    "category": "Medical Drug Approval",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "STAT News",
+    "url": "https://www.statnews.com/",
+    "summary": "The U.S. Food and Drug Administration has granted full approval to a promising new drug for the treatment of early-stage Alzheimer's disease."
+  },
+  {
+    "title": "Breakthrough in gene therapy offers potential cure for sickle cell disease",
+    "category": "Medical Research",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Nature",
+    "url": "https://www.nature.com/",
+    "summary": "Scientists have announced a significant breakthrough in gene therapy, with a new treatment showing the potential to be a functional cure for sickle cell disease."
+  },
+  {
+    "title": "CDC issues warning over rise in antibiotic-resistant 'superbug' infections",
+    "category": "Public Health",
+    "author": "CDC",
+    "date": "2025-08-23",
+    "source": "CDC",
+    "url": "https://www.cdc.gov/media/releases/index.html",
+    "summary": "The Centers for Disease Control and Prevention has issued a health advisory warning of a concerning increase in infections caused by antibiotic-resistant bacteria, often referred to as 'superbugs'."
+  },
+  {
+    "title": "New study links ultra-processed foods to increased risk of cancer",
+    "category": "Nutrition Science",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The BMJ",
+    "url": "https://www.bmj.com/",
+    "summary": "A large-scale study published in The BMJ has found a strong correlation between high consumption of ultra-processed foods and an increased risk of developing various types of cancer."
+  },
+  {
+    "title": "Johnson & Johnson to spin off its consumer health division",
+    "category": "Pharmaceuticals",
+    "author": "Reuters",
+    "date": "2025-08-23",
+    "source": "Reuters",
+    "url": "https://www.reuters.com/business/healthcare-pharmaceuticals/",
+    "summary": "Johnson & Johnson has announced its plan to separate its consumer health products business into a new, publicly traded company."
+  },
+  {
+    "title": "Global mental health crisis deepens, WHO report finds",
+    "category": "Mental Health",
+    "author": "WHO",
+    "date": "2025-08-23",
+    "source": "WHO",
+    "url": "https://www.who.int/news-room/fact-sheets/detail/mental-health-strengthening-our-response",
+    "summary": "A new report from the World Health Organization indicates that the global mental health crisis has worsened, with significant gaps in care and services worldwide."
+  },
+  {
+    "title": "Moderna begins Phase 3 trial for combined COVID-flu vaccine",
+    "category": "Vaccine Development",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "BioPharma Dive",
+    "url": "https://www.biopharmadive.com/",
+    "summary": "Moderna has initiated the final stage of clinical trials for its combination mRNA vaccine, which aims to provide protection against both COVID-19 and influenza with a single shot."
+  },
+  {
+    "title": "UK's NHS faces worst winter crisis on record, health leaders warn",
+    "category": "Healthcare System",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/society/health",
+    "summary": "Leaders in the UK's National Health Service are warning that the healthcare system is facing what could be its most challenging winter ever, due to staffing shortages and high demand."
+  },
+  {
+    "title": "AI model shows high accuracy in detecting early-stage lung cancer from CT scans",
+    "category": "Medical Technology",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Lancet",
+    "url": "https://www.thelancet.com/",
+    "summary": "A new artificial intelligence model has demonstrated remarkable accuracy in identifying early-stage lung cancer in CT scans, potentially leading to earlier diagnoses and better patient outcomes."
+  },
+  {
+    "title": "US life expectancy drops for second consecutive year",
+    "category": "Public Health",
+    "author": "Associated Press",
+    "date": "2025-08-23",
+    "source": "Associated Press",
+    "url": "https://apnews.com/hub/health",
+    "summary": "For the second year in a row, life expectancy in the United States has declined, a trend driven by the COVID-19 pandemic and an increase in overdose deaths."
+  },
+  {
+    "title": "Pfizer to acquire Biohaven Pharmaceuticals for $11.6 billion",
+    "category": "Pharmaceuticals",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Wall Street Journal",
+    "url": "https://www.wsj.com/health",
+    "summary": "Pfizer has agreed to acquire Biohaven Pharmaceuticals, the maker of a popular migraine drug, in a deal valued at $11.6 billion."
+  },
+  {
+    "title": "New wearable sensor can monitor blood sugar levels without a needle",
+    "category": "Medical Technology",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "ScienceDaily",
+    "url": "https://www.sciencedaily.com/",
+    "summary": "Researchers have developed a new wearable sensor that can accurately monitor blood glucose levels through sweat, eliminating the need for painful finger pricks."
+  },
+  {
+    "title": "Dengue fever cases surge in Southeast Asia amid climate change",
+    "category": "Infectious Diseases",
+    "author": "Reuters",
+    "date": "2025-08-23",
+    "source": "Reuters",
+    "url": "https://www.reuters.com/world/asia-pacific/",
+    "summary": "Health officials in Southeast Asia are reporting a dramatic surge in dengue fever cases, with experts linking the increase to climate change and warmer, wetter conditions."
+  },
+  {
+    "title": "Study finds link between air pollution and dementia risk",
+    "category": "Environmental Health",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "JAMA Network",
+    "url": "https://jamanetwork.com/",
+    "summary": "A new long-term study has found a significant association between exposure to air pollution, particularly fine particulate matter, and an increased risk of developing dementia."
+  },
+  {
+    "title": "Amazon launches new telehealth service 'Amazon Clinic'",
+    "category": "Healthcare Technology",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "CNBC",
+    "url": "https://www.cnbc.com/health/",
+    "summary": "Amazon is expanding its presence in the healthcare sector with the launch of 'Amazon Clinic,' a new telehealth service that connects patients with virtual care providers."
+  },
+  {
+    "title": "Universal flu vaccine shows promise in early human trials",
+    "category": "Vaccine Development",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "New England Journal of Medicine",
+    "url": "https://www.nejm.org/",
+    "summary": "An experimental universal flu vaccine, designed to protect against multiple strains of the influenza virus, has shown promising safety and immune response results in its first human trials."
+  },
+  {
+    "title": "FDA committee recommends approval for new RSV vaccine for older adults",
+    "category": "Vaccine Approval",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "FDA",
+    "url": "https://www.fda.gov/news-events/press-announcements",
+    "summary": "An advisory committee to the FDA has voted to recommend the approval of a new vaccine to protect adults over the age of 60 from respiratory syncytial virus (RSV)."
+  },
+  {
+    "title": "Global initiative launched to combat childhood obesity",
+    "category": "Public Health",
+    "author": "UNICEF",
+    "date": "2025-08-23",
+    "source": "UNICEF",
+    "url": "https://www.unicef.org/",
+    "summary": "A coalition of international health organizations, led by UNICEF, has launched a new global initiative aimed at curbing the rising rates of childhood obesity worldwide."
   }
 ]
