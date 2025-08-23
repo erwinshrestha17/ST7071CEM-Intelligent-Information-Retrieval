@@ -1,13 +1,13 @@
-
 import React, { useState } from 'react';
-import {classifyDocument} from "@/services/information-retrival-service.ts";
-import {ClassifierIcon} from "@/components/icons/classifier-icon.tsx";
-import {Spinner} from "@/components/spinner.tsx";
+import { classifyDocument } from "@/services/information-retrival-service.ts";
+import { ClassifierIcon } from "@/components/icons/classifier-icon.tsx";
+import { Spinner } from "@/components/spinner.tsx";
 
 const DocumentClassifier: React.FC = () => {
   const [text, setText] = useState<string>('');
   const [result, setResult] = useState<string | null>(null);
-  const [classificationConfidence,setClassificationConfidence] =useState('')
+  // --- MODIFIED: Store confidence as a number for calculations ---
+  const [classificationConfidence, setClassificationConfidence] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -17,11 +17,14 @@ const DocumentClassifier: React.FC = () => {
     setIsLoading(true);
     setError(null);
     setResult(null);
-    setClassificationConfidence('');
+    setClassificationConfidence(null);
 
     try {
-      const classification = await classifyDocument(text);
-      setResult(classification);
+      // --- MODIFIED: Destructure the object returned from the service ---
+      const { category, confidence } = await classifyDocument(text);
+      setResult(category);
+      // Store the confidence score
+      setClassificationConfidence(confidence);
     } catch (err) {
       setError('An error occurred during classification. Please try again.');
     } finally {
@@ -75,16 +78,21 @@ const DocumentClassifier: React.FC = () => {
           </div>
         )}
         {error && <p className="text-center text-red-400 bg-red-900/30 p-4 rounded-md">{error}</p>}
-        {result && (
-          <div className="text-center space-y-2">
-            <h3 className="text-lg font-semibold text-gray-300">Classification Result:</h3>
-            <p className={`text-2xl font-bold py-4 px-6 rounded-lg inline-block border ${getResultColor(result)}`}>
-              {result}
-            </p>
-            <h3 className="text-lg font-semibold text-gray-300">Classification Result:</h3>
+        {result && classificationConfidence !== null && (
+          <div className="text-center space-y-6">
+            <div>
+              <h3 className="text-lg font-semibold text-gray-300 mb-2">Classification Result:</h3>
               <p className={`text-2xl font-bold py-4 px-6 rounded-lg inline-block border ${getResultColor(result)}`}>
-              {classificationConfidence}%
-            </p>
+                {result}
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-gray-300 mb-2">Confidence Score:</h3>
+              {/* --- MODIFIED: Format the confidence score correctly as a percentage --- */}
+              <p className={`text-2xl font-bold py-4 px-6 rounded-lg inline-block border ${getResultColor(result)}`}>
+                {(classificationConfidence * 100).toFixed(2)}%
+              </p>
+            </div>
           </div>
         )}
       </div>

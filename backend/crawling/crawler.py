@@ -1,5 +1,4 @@
 import time
-import re
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -16,7 +15,7 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from webdriver_manager.chrome import ChromeDriverManager
 
-from backend.crawling.config import USER_AGENT, BASE_URL, POLITE_DELAY, COVENTRY_PUREPORTAL_URL
+from backend.config import USER_AGENT, BASE_URL, POLITE_DELAY, COVENTRY_PUREPORTAL_URL
 
 
 # --- Configuration ---

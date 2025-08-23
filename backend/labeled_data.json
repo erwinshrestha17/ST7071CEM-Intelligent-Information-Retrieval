@@ -1,7 +1,947 @@
 [
-    {"title": "The impact of monetary policy on stock market volatility", "category": "Finance"},
-    {"title": "Corporate governance and firm performance in emerging markets", "category": "Business"},
-    {"title": "A new model for predicting currency exchange rates", "category": "Finance"},
-    {"title": "Consumer behavior in the digital age of marketing", "category": "Business"},
-    {"title": "The role of accounting standards in financial reporting quality", "category": "Accounting"}
+  {
+    "title": "US takes a 10% ownership share in tech giant Intel",
+    "category": "Technology",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Fox Business",
+    "url": "https://www.foxbusiness.com/",
+    "summary": "The US government has acquired a 10% equity stake in Intel, marking a significant intervention in the semiconductor industry to bolster domestic chip production."
+  },
+  {
+    "title": "Trump threatens to fire Fed Governor Cook if she doesn't resign",
+    "category": "Politics",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Fox Business",
+    "url": "https://www.foxbusiness.com/",
+    "summary": "President Donald Trump has publicly called for the resignation of Federal Reserve Governor Cook, threatening to dismiss her if he is re-elected."
+  },
+  {
+    "title": "Powell signals job market, inflation risks could allow for interest rate cut",
+    "category": "Economy",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Fox Business",
+    "url": "https://www.foxbusiness.com/",
+    "summary": "Federal Reserve Chair Jerome Powell has indicated that a combination of a cooling job market and reduced inflation could create conditions for an interest rate cut."
+  },
+  {
+    "title": "Canada planning to lift tariffs on some US goods to resume trade talks",
+    "category": "Trade",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Fox Business",
+    "url": "https://www.foxbusiness.com/",
+    "summary": "In a move to restart trade negotiations, Canada is preparing to remove tariffs on a selection of US goods."
+  },
+  {
+    "title": "Popular streaming service hikes price for some users",
+    "category": "Technology",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Fox Business",
+    "url": "https://www.foxbusiness.com/",
+    "summary": "A major streaming platform has announced a price increase for certain subscription tiers, affecting a portion of its user base."
+  },
+  {
+    "title": "Grocer plans NYC expansion despite government-run grocery store proposal",
+    "category": "Retail",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Fox Business",
+    "url": "https://www.foxbusiness.com/",
+    "summary": "A grocery chain is moving forward with its expansion plans in New York City, despite a proposal for a city-operated grocery store."
+  },
+  {
+    "title": "Musk's X Corp settles $500M severance lawsuit with terminated employees",
+    "category": "Technology",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Fox Business",
+    "url": "https://www.foxbusiness.com/",
+    "summary": "Elon Musk's X Corp has reached a settlement in a $500 million lawsuit filed by former employees over severance pay."
+  },
+  {
+    "title": "Fed set to cut interest rates – but still Trump won't be happy",
+    "category": "Economy",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/uk/business",
+    "summary": "The Federal Reserve is expected to announce an interest rate cut, a move that is unlikely to satisfy President Donald Trump."
+  },
+  {
+    "title": "Government to cover pay and pensions at collapsed South Yorkshire steelworks",
+    "category": "Business",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/uk/business",
+    "summary": "The UK government has stepped in to guarantee the wages and pensions of workers at a collapsed steelworks in South Yorkshire."
+  },
+  {
+    "title": "Wes Streeting's row with pharma firms grows as they reject NHS drug pricing offer",
+    "category": "Healthcare",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/uk/business",
+    "summary": "The conflict between UK's Shadow Health Secretary Wes Streeting and pharmaceutical companies has intensified as the firms rejected a drug pricing proposal from the NHS."
+  },
+  {
+    "title": "Royal Mail still missing delivery targets after sale to Czech tycoon Křetínský",
+    "category": "Business",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/uk/business",
+    "summary": "Royal Mail's delivery performance continues to fall short of targets following its acquisition by Czech billionaire Daniel Křetínský."
+  },
+  {
+    "title": "Block Elon Musk's bid to supply UK home energy, Ed Davey urges",
+    "category": "Energy",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/uk/business",
+    "summary": "Liberal Democrat leader Ed Davey has called for the UK government to block Elon Musk's attempt to enter the UK's home energy market."
+  },
+  {
+    "title": "OnlyFans owner receives $701m in dividends before potential sale",
+    "category": "Business",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/uk/business",
+    "summary": "The owner of the content subscription service OnlyFans has been paid $701 million in dividends ahead of a possible sale of the company."
+  },
+  {
+    "title": "GoM accepts Centre's GST proposal, to recommend scrapping of 12%, 28% slabs",
+    "category": "Economy",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "The Economic Times",
+    "url": "https://economictimes.indiatimes.com/news/new-updates/school-assembly-headlines-for-august-22-top-national-international-business-and-sports-update/articleshow/123434442.cms",
+    "summary": "A Group of Ministers in India has agreed to a proposal to rationalize the Goods and Services Tax (GST) by eliminating the 12% and 28% tax brackets."
+  },
+  {
+    "title": "Parliament passes Online Gaming Bill amid protests from Opposition",
+    "category": "Technology",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "The Economic Times",
+    "url": "https://economictimes.indiatimes.com/news/new-updates/school-assembly-headlines-for-august-22-top-national-international-business-and-sports-update/articleshow/123434442.cms",
+    "summary": "India's Parliament has passed a bill to regulate online gaming, despite strong opposition from other political parties."
+  },
+  {
+    "title": "US, EU lock in trade deal; US official sees auto tariff relief in weeks",
+    "category": "Trade",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "The Economic Times",
+    "url": "https://economictimes.indiatimes.com/news/new-updates/school-assembly-headlines-for-august-22-top-national-international-business-and-sports-update/articleshow/123434442.cms",
+    "summary": "The United States and the European Union have finalized a trade agreement, with a US official suggesting that tariffs on automobiles could be eased within weeks."
+  },
+  {
+    "title": "Boeing in talks to sell up to 500 jets to China: Report",
+    "category": "Aviation",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "The Economic Times",
+    "url": "https://economictimes.indiatimes.com/news/new-updates/school-assembly-headlines-for-august-22-top-national-international-business-and-sports-update/articleshow/123434442.cms",
+    "summary": "Aircraft manufacturer Boeing is reportedly in negotiations to sell a significant number of jets, potentially up to 500, to China."
+  },
+  {
+    "title": "India's economic boom in August fuels sharpest price hikes in over a decade, PMI shows",
+    "category": "Economy",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "The Economic Times",
+    "url": "https://economictimes.indiatimes.com/news/new-updates/school-assembly-headlines-for-august-22-top-national-international-business-and-sports-update/articleshow/123434442.cms",
+    "summary": "India's economy experienced a surge in August, leading to the most significant increase in prices in over ten years, according to the Purchasing Managers' Index (PMI)."
+  },
+  {
+    "title": "US acquires 10% stake in Intel under Trump's new approach to chip strategy",
+    "category": "Technology",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Business Standard",
+    "url": "https://www.business-standard.com/",
+    "summary": "The US government has taken a 10% ownership stake in Intel as part of a new national strategy for the semiconductor industry championed by President Donald Trump."
+  },
+  {
+    "title": "CBI books Anil Ambani's RCom for ₹2,000 cr bank fraud, searches premises",
+    "category": "Business",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Business Standard",
+    "url": "https://www.business-standard.com/",
+    "summary": "India's Central Bureau of Investigation (CBI) has filed a case against Anil Ambani's Reliance Communications (RCom) for alleged bank fraud amounting to ₹2,000 crore and has conducted searches at the company's premises."
+  },
+  {
+    "title": "Jaishankar calls out West's double standards on Russian energy purchases",
+    "category": "Politics",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Business Standard",
+    "url": "https://www.business-standard.com/",
+    "summary": "India's External Affairs Minister S. Jaishankar has criticized Western nations for what he describes as double standards regarding the purchase of Russian energy."
+  },
+  {
+    "title": "NSE's role limited to providing data in Jane Street-like cases: CEO Chauhan",
+    "category": "Finance",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Business Standard",
+    "url": "https://www.business-standard.com/",
+    "summary": "The CEO of the National Stock Exchange of India (NSE), Ashishkumar Chauhan, has stated that the exchange's role is confined to providing data in cases similar to the one involving high-frequency trading firm Jane Street."
+  },
+  {
+    "title": "F&O volumes hit 8-month high in July despite ban on Jane Street",
+    "category": "Finance",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Business Standard",
+    "url": "https://www.business-standard.com/",
+    "summary": "Trading volumes in the futures and options (F&O) segment of the Indian market reached an eight-month high in July, despite the ban imposed on Jane Street."
+  },
+  {
+    "title": "Trump says US to take 10 percent stake in Intel",
+    "category": "Technology",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "Al Jazeera",
+    "url": "https://www.aljazeera.com/economy/",
+    "summary": "President Donald Trump announced that the United States government will acquire a 10 percent stake in the technology company Intel."
+  },
+  {
+    "title": "Behind India's massive Russian oil imports: Asia's richest man",
+    "category": "Energy",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "Al Jazeera",
+    "url": "https://www.aljazeera.com/economy/",
+    "summary": "The article explores the role of Asia's wealthiest individual in facilitating India's significant increase in oil imports from Russia."
+  },
+  {
+    "title": "Canada to ease most retaliatory tariffs against United States",
+    "category": "Trade",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "Al Jazeera",
+    "url": "https://www.aljazeera.com/economy/",
+    "summary": "Canada has announced its intention to remove most of the retaliatory tariffs it had imposed on goods from the United States."
+  },
+  {
+    "title": "Trump threatens to fire US Fed Governor Lisa Cook",
+    "category": "Politics",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "Al Jazeera",
+    "url": "https://www.aljazeera.com/economy/",
+    "summary": "President Donald Trump has issued a threat to dismiss US Federal Reserve Governor Lisa Cook from her position if he is re-elected."
+  },
+  {
+    "title": "US Fed Reserve Chair Powell opens door to September rate cut",
+    "category": "Economy",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "Al Jazeera",
+    "url": "https://www.aljazeera.com/economy/",
+    "summary": "The Chairman of the US Federal Reserve, Jerome Powell, has hinted at the possibility of an interest rate cut in September."
+  },
+  {
+    "title": "Apple in talks to use Google's Gemini AI to power revamped Siri: Report",
+    "category": "Technology",
+    "author": "Reuters",
+    "date": "2025-08-22",
+    "source": "Reuters",
+    "url": "https://www.business-standard.com/author/reuters",
+    "summary": "Apple is reportedly in discussions with Google to license its Gemini artificial intelligence model to enhance the capabilities of its virtual assistant, Siri."
+  },
+  {
+    "title": "Intel has agreed to a deal for US to take 10% equity stake, says Trump",
+    "category": "Technology",
+    "author": "Reuters",
+    "date": "2025-08-22",
+    "source": "Reuters",
+    "url": "https://www.business-standard.com/author/reuters",
+    "summary": "President Donald Trump has announced that Intel has agreed to a deal where the US government will acquire a 10% ownership stake in the company."
+  },
+  {
+    "title": "Trump threatens to sack Fed Governor Lisa Cook if she refuses to resign",
+    "category": "Politics",
+    "author": "Reuters",
+    "date": "2025-08-22",
+    "source": "Reuters",
+    "url": "https://www.business-standard.com/author/reuters",
+    "summary": "In a public statement, President Donald Trump has threatened to remove Federal Reserve Governor Lisa Cook from her position if she does not voluntarily resign."
+  },
+  {
+    "title": "Wall St jumps more than 1% after Powell hints at September rate cut",
+    "category": "Markets",
+    "author": "Reuters",
+    "date": "2025-08-22",
+    "source": "Reuters",
+    "url": "https://www.business-standard.com/author/reuters",
+    "summary": "Wall Street experienced a significant rally, with major indices climbing over 1%, following remarks from Federal Reserve Chair Jerome Powell that suggested a potential interest rate cut in September."
+  },
+  {
+    "title": "Markets regulator Sebi proposes changes to block deal framework",
+    "category": "Finance",
+    "author": "Reuters",
+    "date": "2025-08-22",
+    "source": "Reuters",
+    "url": "https://www.business-standard.com/author/reuters",
+    "summary": "The Securities and Exchange Board of India (Sebi) has put forward proposals to amend the framework for block deals in the stock market."
+  },
+  {
+    "title": "FBI searches ex-Trump adviser John Bolton's Maryland home in security probe",
+    "category": "Politics",
+    "author": "Reuters",
+    "date": "2025-08-22",
+    "source": "Reuters",
+    "url": "https://www.business-standard.com/author/reuters",
+    "summary": "The FBI has conducted a search of the Maryland residence of John Bolton, a former national security adviser to Donald Trump, as part of a security investigation."
+  },
+  {
+    "title": "JPMorgan agrees to pay Malaysia $330 million to settle 1MDB issues",
+    "category": "Finance",
+    "author": "Reuters",
+    "date": "2025-08-22",
+    "source": "Reuters",
+    "url": "https://www.business-standard.com/author/reuters",
+    "summary": "JPMorgan Chase has reached a settlement with the Malaysian government, agreeing to pay $330 million to resolve issues related to the 1MDB scandal."
+  },
+  {
+    "title": "Famine confirmed for first time in Gaza",
+    "category": "Humanitarian Crisis",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "WHO",
+    "url": "https://www.who.int/news-room/releases/1",
+    "summary": "A famine has been officially declared in parts of the Gaza Strip for the first time, according to a joint news release from the World Health Organization."
+  },
+  {
+    "title": "WHO, WMO issue new report and guidance to protect workers from increasing heat stress",
+    "category": "Occupational Health",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "WHO",
+    "url": "https://www.who.int/news-room/releases/1",
+    "summary": "The World Health Organization and the World Meteorological Organization have released a new report with guidance on how to protect workers from the health risks of increasing heat stress."
+  },
+  {
+    "title": "Kenya achieves elimination of human African trypanosomiasis or sleeping sickness as a public health problem",
+    "category": "Disease Eradication",
+    "author": "N/A",
+    "date": "2025-08-08",
+    "source": "WHO",
+    "url": "https://www.who.int/news-room/releases/1",
+    "summary": "Kenya has successfully eliminated human African trypanosomiasis, also known as sleeping sickness, as a public health problem, a significant achievement in disease control."
+  },
+  {
+    "title": "WHO designates new WHO-Listed Authorities, strengthening global access to quality-assured medical products",
+    "category": "Global Health",
+    "author": "N/A",
+    "date": "2025-08-07",
+    "source": "WHO",
+    "url": "https://www.who.int/news-room/releases/1",
+    "summary": "The WHO has designated new 'WHO-Listed Authorities' to ensure that medical products meet high standards of quality, safety, and effectiveness, thereby improving global access."
+  },
+  {
+    "title": "On World Breastfeeding Week, countries urged to invest in health systems and support breastfeeding mothers",
+    "category": "Maternal and Child Health",
+    "author": "N/A",
+    "date": "2025-08-04",
+    "source": "WHO",
+    "url": "https://www.who.int/news-room/releases/1",
+    "summary": "During World Breastfeeding Week, the WHO is calling on countries to increase investment in their health systems to provide better support for breastfeeding mothers."
+  },
+  {
+    "title": "The American Academy of Pediatrics recommends the COVID-19 vaccine for young children, a break from current US CDC recommendations",
+    "category": "Vaccination Policy",
+    "author": "N/A",
+    "date": "2025-08-21",
+    "source": "The Times of India",
+    "url": "https://timesofindia.indiatimes.com/life-style/health-fitness/health-news/the-american-academy-of-pediatrics-recommends-the-covid-19-vaccine-for-very-young-children-a-break-from-current-us-cdc-recommendations/articleshow/123422874.cms",
+    "summary": "The American Academy of Pediatrics has updated its recommendations to include the COVID-19 vaccine for infants and young children, a departure from the current guidance of the CDC."
+  },
+  {
+    "title": "At least 600 CDC employees are getting final termination notices, union says",
+    "category": "Public Health Workforce",
+    "author": "MIKE STOBBE",
+    "date": "2025-08-21",
+    "source": "Associated Press",
+    "url": "https://apnews.com/article/cdc-layoffs-827585f95b24d7dfdf99dd453960a991",
+    "summary": "A union representing CDC employees has stated that at least 600 staff members are receiving permanent termination notices following a recent court decision."
+  },
+  {
+    "title": "China Licenses Its Arthritis Drug to Germany's STADA",
+    "category": "Pharmaceuticals",
+    "author": "Reuters Health Information",
+    "date": "2025-08-20",
+    "source": "Reuters",
+    "url": "https://www.medscape.com/index/list_11444_0",
+    "summary": "Chinese biotech company Bio-Thera Solutions has granted German pharmaceutical company STADA the rights to commercialize its arthritis drug, BAT1806, in several European markets."
+  },
+  {
+    "title": "US Allows Emergency Authorizations of Animal Drugs to Fight Screwworms",
+    "category": "Veterinary Medicine",
+    "author": "Reuters Health Information",
+    "date": "2025-08-19",
+    "source": "Reuters",
+    "url": "https://www.medscape.com/index/list_11444_0",
+    "summary": "The U.S. Food and Drug Administration has been granted the authority to issue emergency authorizations for animal drugs to combat infestations of flesh-eating screwworms."
+  },
+  {
+    "title": "FDA Declines to Approve Oral Drug for Friedreich's Ataxia",
+    "category": "Drug Approval",
+    "author": "Reuters Health Information",
+    "date": "2025-08-19",
+    "source": "Reuters",
+    "url": "https://www.medscape.com/index/list_11444_0",
+    "summary": "The U.S. Food and Drug Administration has denied approval for an oral medication developed by PTC Therapeutics for the treatment of Friedreich's ataxia, a rare genetic disorder."
+  },
+  {
+    "title": "Viking's Weight-loss Pill Data Disappoints, Shares Sink",
+    "category": "Pharmaceuticals",
+    "author": "Reuters Health Information",
+    "date": "2025-08-19",
+    "source": "Reuters",
+    "url": "https://www.medscape.com/index/list_11444_0",
+    "summary": "Viking Therapeutics announced that its experimental weight-loss pill resulted in a 12.2% weight loss in a mid-stage trial, which was below Wall Street's expectations, causing the company's shares to fall."
+  },
+  {
+    "title": "Canada Approves Ozempic to Cut Risk Of Kidney Failure, Heart-related Deaths",
+    "category": "Drug Approval",
+    "author": "Reuters Health Information",
+    "date": "2025-08-19",
+    "source": "Reuters",
+    "url": "https://www.medscape.com/index/list_11444_0",
+    "summary": "Health Canada has approved Novo Nordisk's diabetes drug, Ozempic, for the additional indication of reducing the risk of kidney failure and heart-related deaths in patients with type 2 diabetes."
+  },
+  {
+    "title": "Somalia Faces Diphtheria Surge Amid Aid Cuts",
+    "category": "Infectious Diseases",
+    "author": "Reuters Health Information",
+    "date": "2025-08-19",
+    "source": "Reuters",
+    "url": "https://www.medscape.com/index/list_11444_0",
+    "summary": "Somalia is experiencing a significant increase in diphtheria cases and deaths, with the response hampered by vaccine shortages and reductions in foreign aid."
+  },
+  {
+    "title": "Texas declares measles outbreak over",
+    "category": "Infectious Diseases",
+    "author": "DEVI SHASTRI",
+    "date": "2025-08-18",
+    "source": "Associated Press",
+    "url": "https://apnews.com/article/measles-vaccine-outbreak-texas-mmr-0744a165cfb354022092a1f158c698b0",
+    "summary": "State health officials in Texas have declared the end of a measles outbreak that sickened 762 people, as it has been over 42 days since the last confirmed case."
+  },
+  {
+    "title": "5th death linked to Legionnaires' disease outbreak that has sickened dozens in New York City",
+    "category": "Public Health",
+    "author": "Associated Press",
+    "date": "2025-08-19",
+    "source": "Associated Press",
+    "url": "https://apnews.com/article/legionnaires-disease-nyc-harlem-manhattan-b3f80da5db4b189a129795dbef796dad",
+    "summary": "Health officials in New York City have reported a fifth death associated with an outbreak of Legionnaires' disease in Central Harlem, which has sickened dozens of people."
+  },
+  {
+    "title": "Eau de courgette: rise in foodie perfumes may be linked to weight-loss drugs",
+    "category": "Consumer Trends",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/society/health",
+    "summary": "The growing popularity of 'gourmand' fragrances with food-like scents, such as courgette, may be influenced by the increasing use of weight-loss medications."
+  },
+  {
+    "title": "Air pollution from oil and gas causes 90,000 premature US deaths each year, says new study",
+    "category": "Environmental Health",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/society/health",
+    "summary": "A new study has found that air pollution from the oil and gas industry is responsible for an estimated 90,000 premature deaths in the United States annually."
+  },
+  {
+    "title": "Wes Streeting's row with pharma firms grows as they reject NHS drug pricing offer",
+    "category": "Healthcare Policy",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/society/health",
+    "summary": "The disagreement between the UK's Shadow Health Secretary, Wes Streeting, and pharmaceutical companies has escalated after the firms rejected a new drug pricing proposal for the NHS."
+  },
+  {
+    "title": "As measles gains ground in US, Texas offers lessons from its outbreak",
+    "category": "Infectious Diseases",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/society/health",
+    "summary": "The recent measles outbreak in Texas provides valuable lessons on managing vaccine-hesitant communities, such as the use of free treatment centers and smaller vaccination clinics."
+  },
+  {
+    "title": "Baby food firms given 18 months to improve quality of products in England",
+    "category": "Nutrition",
+    "author": "N/A",
+    "date": "2025-08-21",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/society/health",
+    "summary": "The UK government has given baby food manufacturers in England a deadline of 18 months to improve the quality and nutritional content of their products."
+  },
+  {
+    "title": "California resident tests positive for the plague after camping, officials say",
+    "category": "Infectious Diseases",
+    "author": "N/A",
+    "date": "2025-08-21",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/society/health",
+    "summary": "Health officials in California have confirmed a case of the plague in a resident who had recently been camping in the state."
+  },
+  {
+    "title": "COVID is surging nationwide, and the highest rates are in California",
+    "category": "COVID-19",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "LA Times",
+    "url": "https://www.zerohourhealth.com/blog/glp-1s-shift-portions-policies",
+    "summary": "There is a nationwide surge in COVID-19 cases, with California currently experiencing the highest rates of infection in the country."
+  },
+  {
+    "title": "Americans consume more than half their calories from ultra-processed food",
+    "category": "Nutrition",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "ABC",
+    "url": "https://www.zerohourhealth.com/blog/glp-1s-shift-portions-policies",
+    "summary": "A recent report has highlighted that over half of the caloric intake for Americans comes from ultra-processed foods."
+  },
+  {
+    "title": "Eli Lilly's weight loss pill may not cause as much weight loss as injectables like Zepbound or Wegovy, but pills are cheaper and easier, which could be a game changer",
+    "category": "Pharmaceuticals",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "WSJ",
+    "url": "https://www.zerohourhealth.com/blog/glp-1s-shift-portions-policies",
+    "summary": "While Eli Lilly's new weight loss pill may be less potent than injectable alternatives, its lower cost and ease of use could significantly impact the weight-loss drug market."
+  },
+  {
+    "title": "She's bracing and saving to pay $2,800 a month for ACA health insurance next year",
+    "category": "Healthcare Costs",
+    "author": "Ellen Allen",
+    "date": "2025-08-22",
+    "source": "NPR",
+    "url": "https://www.iowapublicradio.org/news-from-npr/2025-08-22/shes-bracing-and-saving-to-pay-2-800-a-month-for-aca-health-insurance-next-year",
+    "summary": "An individual shares her story of preparing for a significant increase in her Affordable Care Act health insurance premiums, which are expected to rise to $2,800 per month."
+  },
+  {
+    "title": "Have a health care system headache? Share your story",
+    "category": "Healthcare System",
+    "author": "N/A",
+    "date": "2025-08-21",
+    "source": "NPR",
+    "url": "https://www.boisestatepublicradio.org/2025-08-21/have-a-health-care-system-headache-share-your-story",
+    "summary": "NPR and KFF Health News are inviting people to share their frustrating experiences with the U.S. healthcare system to potentially investigate and find solutions."
+  },
+  {
+    "title": "FDA Approves Moderna's New COVID Vaccine With Restricted Use",
+    "category": "Vaccine Approval",
+    "author": "WebMD Health News",
+    "date": "2025-06-03",
+    "source": "WebMD",
+    "url": "https://www.medscape.com/index/list_11445_0",
+    "summary": "The FDA has approved a new mRNA COVID-19 vaccine from Moderna, but with specific limitations on which populations are eligible to receive it."
+  },
+  {
+    "title": "Should You Still Recommend COVID-19 Vaccines?",
+    "category": "Vaccination Policy",
+    "author": "WebMD Health News",
+    "date": "2025-05-30",
+    "source": "WebMD",
+    "url": "https://www.medscape.com/index/list_11445_0",
+    "summary": "The Trump administration has announced that the CDC will no longer recommend COVID-19 vaccines for many children and pregnant people, raising questions for healthcare providers."
+  },
+  {
+    "title": "Tick Season Is Back, but New Lyme Treatment Is on Horizon",
+    "category": "Infectious Diseases",
+    "author": "WebMD Health News",
+    "date": "2025-04-30",
+    "source": "WebMD",
+    "url": "https://www.medscape.com/index/list_11445_0",
+    "summary": "As tick season returns, bringing the threat of Lyme disease, there is promising news about a new treatment for the illness that is currently in development."
+  },
+  {
+    "title": "New Study Says Measles Could Become Endemic: 3 Key Takeaways",
+    "category": "Infectious Diseases",
+    "author": "WebMD Health News",
+    "date": "2025-04-29",
+    "source": "WebMD",
+    "url": "https://www.medscape.com/index/list_11445_0",
+    "summary": "A Stanford University study suggests that measles could become an endemic disease again, meaning it would be consistently present in the population at a low level."
+  },
+  {
+    "title": "COVID tied to faster blood vessel aging, especially in women",
+    "category": "COVID-19",
+    "author": "Corrie Pelc",
+    "date": "2025-08-22",
+    "source": "Medical News Today",
+    "url": "https://www.medicalnewstoday.com/",
+    "summary": "A new study has found a link between COVID-19 infection and accelerated aging of blood vessels, with the effect being more pronounced in women."
+  },
+  {
+    "title": "Women with Alzheimer's have lower levels of healthy fats, study finds",
+    "category": "Alzheimer's Disease",
+    "author": "Erika Watts",
+    "date": "2025-08-22",
+    "source": "Medical News Today",
+    "url": "https://www.medicalnewstoday.com/news",
+    "summary": "Research has shown that women with Alzheimer's disease have lower levels of healthy fats in their brains, suggesting a potential area for further investigation."
+  },
+  {
+    "title": "Potassium-rich diet linked to lower depression risk in new study",
+    "category": "Mental Health",
+    "author": "Corrie Pelc",
+    "date": "2025-08-21",
+    "source": "Medical News Today",
+    "url": "https://www.medicalnewstoday.com/news",
+    "summary": "A recent study has indicated that a diet rich in potassium may be associated with a reduced risk of developing depression."
+  },
+  {
+    "title": "Gaza: Famine declared as Israel continues to “weaponise” food and clean water",
+    "category": "Humanitarian Crisis",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "The BMJ",
+    "url": "https://www.bmj.com/",
+    "summary": "Aid agencies have declared a famine in Gaza, stating that over half a million people are trapped in the crisis, with accusations that food and water are being used as weapons."
+  },
+  {
+    "title": "Menopause misinformation is harming care",
+    "category": "Women's Health",
+    "author": "N/A",
+    "date": "2025-08-20",
+    "source": "The BMJ",
+    "url": "https://www.bmj.com/",
+    "summary": "The growth of the 'femtech' market is raising concerns about the spread of misinformation regarding menopause, which could be negatively impacting the quality of care for women."
+  },
+  {
+    "title": "Trump threatens to fire Fed Governor Cook if she doesn't resign",
+    "category": "US Politics",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Fox News",
+    "url": "https://www.foxnews.com/politics",
+    "summary": "President Donald Trump has publicly stated that he will dismiss Federal Reserve Governor Lisa Cook if she does not resign from her position, should he be re-elected."
+  },
+  {
+    "title": "GOP Rep. Chris Smith's primary challenger is a convicted felon who wants to slash federal spending",
+    "category": "US Elections",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Fox News",
+    "url": "https://www.foxnews.com/politics",
+    "summary": "A convicted felon is running against Republican Representative Chris Smith in the primary, campaigning on a platform of significantly reducing federal spending."
+  },
+  {
+    "title": "Trump threatens to fire Fed governor, calls for her to resign",
+    "category": "US Politics",
+    "author": "Associated Press",
+    "date": "2025-08-23",
+    "source": "Associated Press",
+    "url": "https://apnews.com/hub/politics",
+    "summary": "President Donald Trump has threatened to fire Federal Reserve Governor Lisa Cook and has called for her immediate resignation, escalating his criticism of the central bank."
+  },
+  {
+    "title": "House panel demands details of FBI search of John Bolton's home",
+    "category": "US Politics",
+    "author": "Associated Press",
+    "date": "2025-08-23",
+    "source": "Associated Press",
+    "url": "https://apnews.com/hub/politics",
+    "summary": "A House committee is demanding that the FBI provide detailed information regarding its search of the home of John Bolton, former national security adviser to Donald Trump."
+  },
+  {
+    "title": "California's governor pardons nearly 2 dozen people, including some who faced deportation",
+    "category": "US Politics",
+    "author": "Associated Press",
+    "date": "2025-08-23",
+    "source": "Associated Press",
+    "url": "https://apnews.com/hub/politics",
+    "summary": "The governor of California has granted pardons to approximately 24 individuals, some of whom were at risk of being deported from the United States."
+  },
+  {
+    "title": "US politics needs a miracle, says Christian author Max Lucado",
+    "category": "US Politics",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/us-news/us-politics",
+    "summary": "Prominent Christian author Max Lucado has expressed his view that the current state of US politics requires a 'miracle' to overcome its deep divisions and challenges."
+  },
+  {
+    "title": "Wes Streeting's row with pharma firms grows as they reject NHS drug pricing offer",
+    "category": "UK Politics",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/politics",
+    "summary": "The conflict between the UK's Shadow Health Secretary, Wes Streeting, and pharmaceutical companies has intensified after the firms turned down a new drug pricing offer for the NHS."
+  },
+  {
+    "title": "The Tory right have a new hero – and he wants to slash the size of the state",
+    "category": "UK Politics",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/politics",
+    "summary": "A new figure has emerged as a hero for the right wing of the Conservative Party in the UK, advocating for a significant reduction in the size and scope of the government."
+  },
+  {
+    "title": "FBI searches home of John Bolton, Trump's former national security adviser",
+    "category": "US Politics",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/us-news/us-politics",
+    "summary": "The FBI has conducted a search of the residence of John Bolton, who served as national security adviser under President Donald Trump."
+  },
+  {
+    "title": "Starmer's honeymoon continues as poll shows voters think he is a better leader than Sunak",
+    "category": "UK Politics",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/politics",
+    "summary": "A new poll indicates that Labour leader Keir Starmer's popularity remains high, with voters viewing him as a more capable leader than the current Prime Minister, Rishi Sunak."
+  },
+  {
+    "title": "‘It’s like an abusive relationship’: the voters who feel trapped by Trump",
+    "category": "US Politics",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/us-news/us-politics",
+    "summary": "The article explores the sentiments of some voters who, despite their reservations, feel compelled to support Donald Trump, likening their situation to being in an abusive relationship."
+  },
+  {
+    "title": "Keir Starmer plans to reform House of Lords with elected members",
+    "category": "UK Politics",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "The Guardian",
+    "url": "https://www.theguardian.com/politics",
+    "summary": "Labour leader Keir Starmer has announced his intention to reform the House of Lords, proposing the introduction of elected members to the upper chamber of the UK Parliament."
+  },
+  {
+    "title": "Trump says US to take 10 percent stake in Intel",
+    "category": "US Politics",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "Al Jazeera",
+    "url": "https://www.aljazeera.com/politics/",
+    "summary": "President Donald Trump has announced that the U.S. government will acquire a 10 percent equity stake in the semiconductor company Intel."
+  },
+  {
+    "title": "FBI searches home of Trump’s ex-adviser John Bolton: Reports",
+    "category": "US Politics",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "Al Jazeera",
+    "url": "https://www.aljazeera.com/politics/",
+    "summary": "According to reports, the Federal Bureau of Investigation has searched the home of John Bolton, a former national security adviser in the Trump administration."
+  },
+  {
+    "title": "Canada to ease most retaliatory tariffs against United States",
+    "category": "International Relations",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "Al Jazeera",
+    "url": "https://www.aljazeera.com/politics/",
+    "summary": "The Canadian government has announced its decision to lift most of the retaliatory tariffs that were imposed on goods from the United States."
+  },
+  {
+    "title": "Trump threatens to fire US Fed Governor Lisa Cook",
+    "category": "US Politics",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "Al Jazeera",
+    "url": "https://www.aljazeera.com/politics/",
+    "summary": "President Donald Trump has publicly threatened to dismiss U.S. Federal Reserve Governor Lisa Cook from her position if he is re-elected."
+  },
+  {
+    "title": "US takes a 10% ownership share in tech giant Intel",
+    "category": "US Politics",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Fox Business",
+    "url": "https://www.foxbusiness.com/politics",
+    "summary": "The U.S. government has acquired a 10% equity stake in Intel, marking a significant intervention in the semiconductor industry to bolster domestic chip production."
+  },
+  {
+    "title": "Trump threatens to fire Fed Governor Cook if she doesn't resign",
+    "category": "US Politics",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Fox Business",
+    "url": "https://www.foxbusiness.com/politics",
+    "summary": "President Donald Trump has publicly called for the resignation of Federal Reserve Governor Cook, threatening to dismiss her if he is re-elected."
+  },
+  {
+    "title": "Canada planning to lift tariffs on some US goods to resume trade talks",
+    "category": "International Relations",
+    "author": "N/A",
+    "date": "2025-08-23",
+    "source": "Fox Business",
+    "url": "https://www.foxbusiness.com/politics",
+    "summary": "In a move to restart trade negotiations, Canada is preparing to remove tariffs on a selection of U.S. goods."
+  },
+  {
+    "title": "US sanctions Israeli group for blocking Gaza aid",
+    "category": "International Relations",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "BBC News",
+    "url": "https://www.bbc.com/news/world-middle-east-69956417",
+    "summary": "The United States has imposed sanctions on an Israeli group for obstructing the delivery of humanitarian aid to the Gaza Strip."
+  },
+  {
+    "title": "Trump says he would fire Fed governor if re-elected",
+    "category": "US Politics",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "BBC News",
+    "url": "https://www.bbc.com/news/business-69955896",
+    "summary": "President Donald Trump has stated his intention to fire a Federal Reserve governor if he wins the upcoming presidential election."
+  },
+  {
+    "title": "FBI searches home of ex-Trump aide John Bolton",
+    "category": "US Politics",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "BBC News",
+    "url": "https://www.bbc.com/news/world-us-canada-69955895",
+    "summary": "The Federal Bureau of Investigation has conducted a search of the residence of John Bolton, a former national security adviser to Donald Trump."
+  },
+  {
+    "title": "Trump says US to take 10% stake in Intel in new chips push",
+    "category": "US Politics",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "BBC News",
+    "url": "https://www.bbc.com/news/business-69955894",
+    "summary": "As part of a new initiative to boost the domestic semiconductor industry, President Donald Trump has announced that the U.S. government will acquire a 10% stake in Intel."
+  },
+  {
+    "title": "The Memo: Trump’s angry summer threatens to upend the presidential race",
+    "category": "US Elections",
+    "author": "NIALL STANAGE",
+    "date": "2025-08-22",
+    "source": "The Hill",
+    "url": "https://thehill.com/homenews/campaign/4849319-the-memo-trumps-angry-summer-threatens-to-upend-the-presidential-race/",
+    "summary": "The article discusses how President Trump's recent series of angry outbursts and controversial statements could potentially disrupt the dynamics of the presidential election."
+  },
+  {
+    "title": "House Republicans demand details of FBI search of John Bolton’s home",
+    "category": "US Politics",
+    "author": "REBECCA BEITSCH",
+    "date": "2025-08-22",
+    "source": "The Hill",
+    "url": "https://thehill.com/policy/national-security/4849298-house-republicans-demand-details-of-fbi-search-of-john-boltons-home/",
+    "summary": "Republican members of the House of Representatives are formally requesting information from the FBI regarding the search of former national security adviser John Bolton's home."
+  },
+  {
+    "title": "Trump threatens to fire Fed’s Cook if she won’t resign",
+    "category": "US Politics",
+    "author": "TAYLOR GILO",
+    "date": "2025-08-22",
+    "source": "The Hill",
+    "url": "https://thehill.com/business/4849294-trump-threatens-to-fire-feds-cook-if-she-wont-resign/",
+    "summary": "President Donald Trump has issued a threat to remove Federal Reserve Governor Lisa Cook from her position if she does not voluntarily step down."
+  },
+  {
+    "title": "US to take 10 percent stake in Intel in exchange for funding",
+    "category": "US Politics",
+    "author": "JULIA SHAPERO",
+    "date": "2025-08-22",
+    "source": "The Hill",
+    "url": "https://thehill.com/business/4849286-us-to-take-10-percent-stake-in-intel-in-exchange-for-funding/",
+    "summary": "The U.S. government will receive a 10 percent ownership stake in Intel in return for providing the company with federal funding."
+  },
+  {
+    "title": "Harris-Trump debate likely to draw massive audience, intense scrutiny",
+    "category": "US Elections",
+    "author": "BRETT SAMUELS",
+    "date": "2025-08-22",
+    "source": "The Hill",
+    "url": "https://thehill.com/homenews/campaign/4849277-harris-trump-debate-likely-to-draw-massive-audience-intense-scrutiny/",
+    "summary": "The upcoming debate between Vice President Kamala Harris and President Donald Trump is expected to attract a very large television audience and will be subject to intense media analysis."
+  },
+  {
+    "title": "Biden and his aides are privately worried about Trump’s rising poll numbers",
+    "category": "US Elections",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "The New York Times",
+    "url": "https://www.nytimes.com/politics/",
+    "summary": "President Biden and his team are reportedly concerned about the recent increase in Donald Trump's poll numbers, as they prepare for a challenging re-election campaign."
+  },
+  {
+    "title": "The Democratic Convention Was a Success. But Will It Matter?",
+    "category": "US Elections",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "The New York Times",
+    "url": "https://www.nytimes.com/politics/",
+    "summary": "The article analyzes the success of the Democratic National Convention and questions whether it will have a lasting impact on the outcome of the presidential election."
+  },
+  {
+    "title": "Trump’s Attacks on the Justice System Are Having an Effect",
+    "category": "US Politics",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "The New York Times",
+    "url": "https://www.nytimes.com/politics/",
+    "summary": "President Trump's repeated criticisms of the U.S. justice system are beginning to influence public perception and trust in the institution, according to recent polls."
+  },
+  {
+    "title": "How Trump’s V.P. Pick, J.D. Vance, Is Trying to Win Over Skeptics",
+    "category": "US Elections",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "The New York Times",
+    "url": "https://www.nytimes.com/politics/",
+    "summary": "The article examines the strategies being employed by J.D. Vance, Donald Trump's vice-presidential nominee, to gain the support of voters who are hesitant about his candidacy."
+  },
+  {
+    "title": "The House Is in Play. Here’s a Look at the Key Races.",
+    "category": "US Elections",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "The New York Times",
+    "url": "https://www.nytimes.com/politics/",
+    "summary": "This piece provides an overview of the most competitive and crucial races that will determine which party controls the House of Representatives after the upcoming elections."
+  },
+  {
+    "title": "Why the G.O.P. Is Anxious About Winning the Senate",
+    "category": "US Elections",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "The New York Times",
+    "url": "https://www.nytimes.com/politics/",
+    "summary": "The article explores the reasons behind the Republican Party's concerns about its ability to secure a majority in the Senate in the next election."
+  },
+  {
+    "title": "Here are the major takeaways from the first night of the RNC",
+    "category": "US Elections",
+    "author": "N/A",
+    "date": "2025-08-22",
+    "source": "NPR",
+    "url": "https://www.npr.org/politics",
+    "summary": "This article summarizes the key highlights and significant moments from the opening night of the Republican National Convention."
+  }
 ]

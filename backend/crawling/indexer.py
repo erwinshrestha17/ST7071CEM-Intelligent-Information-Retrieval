@@ -9,7 +9,7 @@ from datetime import datetime
 
 # Local module imports
 from config import PUBLICATIONS_FILE, INDEX_FILE
-from preprocessing import preprocess_text
+from crawler_preprocessing import preprocess_text
 
 
 def build_index():
