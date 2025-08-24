@@ -15,7 +15,7 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.webdriver.chrome.options import Options as ChromeOptions
 from webdriver_manager.chrome import ChromeDriverManager
 
-from backend.config import USER_AGENT, BASE_URL, POLITE_DELAY, COVENTRY_PUREPORTAL_URL
+from backend.config import USER_AGENT, BASE_URL, POLITE_DELAY, COVENTRY_PUREPORTAL_URL, PUBLICATIONS_FILE
 
 
 # --- Configuration ---
@@ -208,5 +208,5 @@ if __name__ == "__main__":
     print(len(publications_data))
 
     df = pd.DataFrame(publications_data)
-    df.to_csv("coventry_publications.csv", index=False)
-    print("Publications saved to coventry_publications.csv")
+    df.to_csv(PUBLICATIONS_FILE, index=False)
+    print(f"Publications saved to {PUBLICATIONS_FILE}")

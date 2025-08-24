@@ -4,7 +4,8 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.model_selection import train_test_split, GridSearchCV
+# MODIFICATION: Added cross_val_score for robust evaluation
+from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
 
@@ -45,7 +46,6 @@ def load_labeled_data(file_path):
     return documents, labels
 
 
-# MODIFICATION: New function to plot the confusion matrix
 def plot_confusion_matrix(cm, class_names, filename="confusion_matrix.png"):
     """
     Creates, displays, and saves a confusion matrix plot using seaborn.
@@ -56,9 +56,11 @@ def plot_confusion_matrix(cm, class_names, filename="confusion_matrix.png"):
     plt.ylabel('Actual')
     plt.xlabel('Predicted')
     plt.title('Confusion Matrix')
-    plt.tight_layout()  # Adjust layout to make sure everything fits
+    plt.tight_layout()
     plt.savefig(filename)
     print(f"\nConfusion matrix plot saved to: {filename}")
+    # MODIFICATION: Add plt.show() to display the plot in a window
+    plt.show()
 
 
 def main():
@@ -76,7 +78,14 @@ def main():
 
     # --- Step 3: Vectorize Data ---
     print("Vectorizing data using TF-IDF...")
-    tfidf_vectorizer = TfidfVectorizer(max_features=2000, ngram_range=(1, 2), sublinear_tf=True)
+    # MODIFICATION: Tuned TF-IDF with min_df and max_df to filter noise
+    tfidf_vectorizer = TfidfVectorizer(
+        max_features=2000,
+        ngram_range=(1, 2),
+        sublinear_tf=True,
+        min_df=3,       # Ignore terms that appear in less than 3 documents
+        max_df=0.95     # Ignore terms that appear in more than 95% of documents
+    )
     X = tfidf_vectorizer.fit_transform(preprocessed_docs)
     y = labels
 
@@ -93,9 +102,9 @@ def main():
 
     y_pred = best_classifier.predict(X_test)
 
-    # --- Evaluation Metrics ---
+    # --- Evaluation Metrics on the single test split ---
     accuracy = accuracy_score(y_test, y_pred)
-    print(f"\nFINAL Naïve Bayes Model Accuracy: {accuracy:.2f}")
+    print(f"\nAccuracy on hold-out test set: {accuracy:.2f}")
 
     print("\nClassification Report:")
     print(classification_report(y_test, y_pred))
@@ -106,8 +115,15 @@ def main():
     print(cm)
     print(f"\nLabels: {class_labels}")
 
-    # MODIFICATION: Call the new function to generate and save the plot
     plot_confusion_matrix(cm, class_labels)
+
+    # MODIFICATION: Implement More Robust Evaluation with Cross-Validation
+    print("\n--- Running Final Cross-Validation for Robustness Check ---")
+    # Use the entire dataset (X, y) and the best model from GridSearchCV
+    scores = cross_val_score(best_classifier, X, y, cv=5, scoring='accuracy')
+    print(f"Cross-validation accuracy scores: {scores}")
+    print(f"Average CV Accuracy: {scores.mean():.2f} (+/- {scores.std() * 2:.2f})")
+
 
     # --- Step 5: Save the BEST Model and Vectorizer ---
     classifier_path = Path("naive_bayes_classifier.pkl")

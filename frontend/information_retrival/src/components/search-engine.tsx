@@ -22,8 +22,8 @@ const SearchEngine: React.FC = () => {
     setResults([]);
 
     try {
-      const publications = await searchPublications(query);
-      setResults(publications);
+      const response = await searchPublications(query);
+      setResults(response.publications);
     } catch (err) {
       setError('An error occurred while fetching search results. Please try again.');
     } finally {

@@ -1,4 +1,3 @@
-fastapi
 uvicorn[standard]
 pydantic
 requests
@@ -8,3 +7,4 @@ undetected-chromedriver
 scikit-learn
 nltk
 schedule
+pandas

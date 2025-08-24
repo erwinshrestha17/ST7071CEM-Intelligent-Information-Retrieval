@@ -1,30 +1,47 @@
-# backend/main.py
-
 import json
 import csv
 import pickle
 import numpy as np
-from typing import List, Optional
+from typing import List, Optional, DefaultDict
 from fastapi import FastAPI, Query, HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from fastapi.middleware.cors import CORSMiddleware
 from collections import defaultdict
 from datetime import datetime
 import traceback
-from pathlib import Path  # Import Path for robust path handling
+from pathlib import Path
 
-# Local module imports
-# MODIFICATION: Removed unused config imports for classifier files
-from backend.config import INDEX_FILE, PUBLICATIONS_FILE
-from backend.crawling.crawler_preprocessing import preprocess_text as preprocess_for_search
-from backend.classification.classification_preprocessing import preprocess_text as preprocess_for_classification
+# --- Local Module Imports ---
+# Make sure you have these files and they are correctly referenced
+# For this example, we'll assume placeholder paths if they don't exist.
+try:
+    from backend.config import INDEX_FILE, PUBLICATIONS_FILE
+    from backend.crawling.crawler_preprocessing import preprocess_text as preprocess_for_search
+    from backend.classification.classification_preprocessing import preprocess_text as preprocess_for_classification
+except ImportError:
+    # Define dummy functions and paths if the modules are not found,
+    # allowing the server to start for inspection.
+    print("Warning: Local modules not found. Using placeholder functions and paths.")
+    INDEX_FILE = "index.json"
+    PUBLICATIONS_FILE = "publications.csv"
+
+
+    def preprocess_for_search(text: str) -> List[str]:
+        return text.lower().split()
+
+
+    def preprocess_for_classification(text: str) -> str:
+        return text.lower()
 
 # --- App and CORS Setup ---
 app = FastAPI(title="Publication Search API", version="1.0.0")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173"],
-    allow_credentials=True, allow_methods=["*"], allow_headers=["*"],
+    allow_origins=["http://localhost:3000", "http://localhost:5173"],  # Adjust for your frontend port
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # --- Global In-Memory Stores ---
@@ -35,6 +52,7 @@ classifier = None
 vectorizer = None
 
 
+# --- Startup Event ---
 @app.on_event("startup")
 async def startup_event_handler():
     """Loads and pre-processes data files into memory on server start."""
@@ -52,6 +70,7 @@ async def startup_event_handler():
         with open(PUBLICATIONS_FILE, 'r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             for row in reader:
+                # Clean up author data
                 try:
                     authors_str = row.get('authors', '[]')
                     authors_data = json.loads(authors_str)
@@ -61,6 +80,8 @@ async def startup_event_handler():
                         row['authors'] = authors_data
                 except (json.JSONDecodeError, TypeError):
                     row['authors'] = []
+
+                # Parse and standardize publication year
                 pub_year = None
                 date_str = row.get('date', '').strip().replace('Sept', 'Sep')
                 if date_str:
@@ -75,40 +96,46 @@ async def startup_event_handler():
                 document_store.append(row)
         print(f"-> Publications data loaded with {len(document_store)} documents.")
 
-        # --- MODIFICATION: Load the CORRECT Naive Bayes model files ---
-        # The paths are relative to the project root where uvicorn is running.
+        # Load the Naive Bayes model files
         CLASSIFIER_FILE = Path("backend/classification/naive_bayes_classifier.pkl")
         VECTORIZER_FILE = Path("backend/classification/tfidf_vectorizer_nb.pkl")
 
         print(f"-> Loading classifier from: {CLASSIFIER_FILE}")
-        print(f"-> Loading vectorizer from: {VECTORIZER_FILE}")
-
         with open(CLASSIFIER_FILE, 'rb') as f:
             classifier = pickle.load(f)
+
+        print(f"-> Loading vectorizer from: {VECTORIZER_FILE}")
         with open(VECTORIZER_FILE, 'rb') as f:
             vectorizer = pickle.load(f)
+
         print("-> Naive Bayes classifier and vectorizer loaded successfully.")
 
+    except FileNotFoundError as e:
+        print(f"FATAL ERROR: A required data file was not found: {e}. API may not function.")
     except Exception as e:
         print(f"FATAL ERROR during startup: {e}. API may not function.")
-        traceback.print_exc()  # Print full error for debugging
+        traceback.print_exc()
+
     print("--- STARTUP COMPLETE. API is ready. ---")
 
 
 # --- API Models ---
+
 class SearchRequest(BaseModel):
     query: str
 
 
 class Publication(BaseModel):
-    title: Optional[str] = None
-    publication_url: Optional[str] = Field(None, alias='publication_link')
-    authors: Optional[List[str]] = None
-    publication_year: Optional[int] = Field(None, alias='publicationYear')
-    abstract: Optional[str] = None
+    """Represents a single publication document in the response."""
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        from_attributes = True
+    title: Optional[str] = None
+    authors: List[str] = []
+    date: Optional[str] = None
+    abstract: Optional[str] = None
+    publication: Optional[str] = None
+    publicationYear: Optional[int] = None
+    category: Optional[str] = None
 
 
 class SearchResponse(BaseModel):
@@ -125,7 +152,69 @@ class ClassificationResponse(BaseModel):
     confidence_score: float
 
 
+# --- Helper Functions for Search Logic ---
+
+def _calculate_tf_idf_scores(query_tokens: List[str]) -> DefaultDict[str, float]:
+    """Calculates TF-IDF scores for documents based on query tokens."""
+    scores = defaultdict(float)
+    for token in query_tokens:
+        if token in index_data:
+            term_info = index_data[token]
+            idf = term_info.get('idf', 1.0)
+            for doc_id, tf in term_info['postings'].items():
+                scores[doc_id] += tf * idf
+    return scores
+
+
+def _filter_doc_ids_by_year(
+        doc_ids: List[str],
+        min_year: Optional[int],
+        max_year: Optional[int]
+) -> List[str]:
+    """Filters a list of document IDs based on a year range."""
+    if not min_year and not max_year:
+        return doc_ids
+
+    filtered_ids = []
+    for doc_id in doc_ids:
+        meta = document_metadata.get(doc_id)
+        if not meta or meta.get('year') is None:
+            continue
+
+        pub_year = meta['year']
+        if (min_year and pub_year < min_year) or (max_year and pub_year > max_year):
+            continue
+
+        filtered_ids.append(doc_id)
+    return filtered_ids
+
+
+def _get_classified_publications(doc_ids: List[str]) -> List[dict]:
+    """Retrieves and classifies full publication data for a list of IDs."""
+    results = []
+    for doc_id in doc_ids:
+        try:
+            doc = document_store[int(doc_id)]
+
+            text_to_classify = (doc.get('title', '') + ' ' + doc.get('abstract', '')).strip()
+
+            if classifier and vectorizer and text_to_classify:
+                processed_text = preprocess_for_classification(text_to_classify)
+                vectorized_text = vectorizer.transform([processed_text])
+                predicted_category = classifier.predict(vectorized_text)[0]
+                doc['category'] = predicted_category
+            else:
+                doc['category'] = 'Unclassified'
+
+            results.append(doc)
+        except (IndexError, ValueError) as e:
+            print(f"Warning: Could not retrieve document for ID '{doc_id}'. Error: {e}")
+            continue
+    return results
+
+
 # --- API Endpoints ---
+
 @app.get("/")
 def read_root():
     return {"status": "API is running."}
@@ -133,13 +222,9 @@ def read_root():
 
 @app.post("/api/classify", response_model=ClassificationResponse)
 async def classify_text(request: ClassificationRequest):
-    """
-    Classifies the given text into a predefined category.
-    """
+    """Classifies the given text into a predefined category."""
     if not classifier or not vectorizer:
-        raise HTTPException(
-            status_code=503, detail="Classifier is not available or failed to load."
-        )
+        raise HTTPException(status_code=503, detail="Classifier is not available.")
 
     try:
         processed_text = preprocess_for_classification(request.text)
@@ -153,11 +238,7 @@ async def classify_text(request: ClassificationRequest):
             confidence_score=confidence
         )
     except Exception as e:
-        print("--- AN ERROR OCCURRED DURING CLASSIFICATION ---")
-        traceback.print_exc()
-        raise HTTPException(
-            status_code=500, detail=f"An error occurred during classification: {e}"
-        )
+        raise HTTPException(status_code=500, detail=f"Classification error: {e}")
 
 
 @app.post("/api/search", response_model=SearchResponse)
@@ -166,42 +247,38 @@ async def search_publications(
         page: int = 1, page_size: int = Query(10, ge=1, le=100),
         min_year: Optional[int] = None, max_year: Optional[int] = None
 ):
+    """
+    Searches publications based on a query, filters by year,
+    and returns paginated, classified results.
+    """
     if not index_data or not document_store:
-        raise HTTPException(status_code=503, detail="Search index not available.")
+        raise HTTPException(status_code=503, detail="Search index is not available.")
 
+    # 1. Process query and calculate scores
     query_tokens = preprocess_for_search(request.query)
-    scores = defaultdict(float)
-
-    for token in query_tokens:
-        if token in index_data:
-            term_info = index_data[token]
-            idf = term_info.get('idf', 1.0)
-            for doc_id, tf in term_info['postings'].items():
-                scores[doc_id] += tf * idf
+    scores = _calculate_tf_idf_scores(query_tokens)
 
     if not scores:
         return SearchResponse(total=0, publications=[])
 
-    if min_year or max_year:
-        filtered_doc_ids = []
-        for doc_id in scores:
-            meta = document_metadata.get(doc_id)
-            if not meta or meta.get('year') is None:
-                continue
-            pub_year = meta['year']
-            if (min_year and pub_year < min_year) or (max_year and pub_year > max_year):
-                continue
-            filtered_doc_ids.append(doc_id)
-    else:
-        filtered_doc_ids = list(scores.keys())
+    # 2. Filter results by year
+    doc_ids = list(scores.keys())
+    filtered_doc_ids = _filter_doc_ids_by_year(doc_ids, min_year, max_year)
 
-    sorted_doc_ids = sorted(filtered_doc_ids, key=lambda id: scores[id], reverse=True)
+    # 3. Sort by relevance score
+    sorted_doc_ids = sorted(
+        filtered_doc_ids,
+        key=lambda doc_id: scores[doc_id],
+        reverse=True
+    )
 
+    # 4. Paginate the results
     total_results = len(sorted_doc_ids)
     start_index = (page - 1) * page_size
     end_index = start_index + page_size
     paginated_ids = sorted_doc_ids[start_index:end_index]
 
-    results = [document_store[int(doc_id)] for doc_id in paginated_ids]
+    # 5. Retrieve full publication data and classify
+    results = _get_classified_publications(paginated_ids)
 
     return SearchResponse(total=total_results, publications=results)

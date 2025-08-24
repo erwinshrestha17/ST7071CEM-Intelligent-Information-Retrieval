@@ -7,9 +7,8 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).parent.parent
 
 # --- File Paths ---
-PUBLICATIONS_FILE = PROJECT_ROOT / "backend/coventry_publications.csv"
-INDEX_FILE = PROJECT_ROOT / "backend/search_index.json"
-LABELED_DATA_FILE = PROJECT_ROOT / "backend/labeled_data.json"
+PUBLICATIONS_FILE = PROJECT_ROOT / "backend/crawling/coventry_publications.csv"
+INDEX_FILE = PROJECT_ROOT / "backend/crawling/search_index.json"
 
 # --- Model & Vectorizer Paths ---
 CLASSIFIER_FILE = PROJECT_ROOT / "backend/classification/naive_bayes_classifier.pkl"

@@ -8,7 +8,7 @@ import math
 from datetime import datetime
 
 # Local module imports
-from config import PUBLICATIONS_FILE, INDEX_FILE
+from backend.config import PUBLICATIONS_FILE, INDEX_FILE
 from crawler_preprocessing import preprocess_text
 
 
