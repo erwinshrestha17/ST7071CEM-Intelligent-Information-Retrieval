@@ -10,6 +10,7 @@ from collections import defaultdict
 from datetime import datetime
 import traceback
 from pathlib import Path
+import pprint
 
 # --- Local Module Imports ---
 # Make sure you have these files and they are correctly referenced
@@ -136,6 +137,7 @@ class Publication(BaseModel):
     publication: Optional[str] = None
     publicationYear: Optional[int] = None
     category: Optional[str] = None
+    publicationUrl: Optional[str] = Field(None, alias='publication_link')
 
 
 class SearchResponse(BaseModel):
@@ -241,6 +243,8 @@ async def classify_text(request: ClassificationRequest):
         raise HTTPException(status_code=500, detail=f"Classification error: {e}")
 
 
+
+
 @app.post("/api/search", response_model=SearchResponse)
 async def search_publications(
         request: SearchRequest,
@@ -251,19 +255,35 @@ async def search_publications(
     Searches publications based on a query, filters by year,
     and returns paginated, classified results.
     """
+    print("─" * 50)
+    print("🚀 NEW SEARCH REQUEST RECEIVED 🚀")
+
+    # --- Inspect Initial Inputs ---
+    print("\n[INPUT] Request Body (SearchRequest):", request)
+    print(f"[INPUT] Query Parameters: page={page}, page_size={page_size}, min_year={min_year}, max_year={max_year}")
+
     if not index_data or not document_store:
         raise HTTPException(status_code=503, detail="Search index is not available.")
 
     # 1. Process query and calculate scores
     query_tokens = preprocess_for_search(request.query)
+    print("\n[STEP 1] Preprocessed Query Tokens:", query_tokens)
+
     scores = _calculate_tf_idf_scores(query_tokens)
+    # Using pprint for better readability of large dictionaries
+    print("\n[STEP 1] Calculated TF-IDF Scores (first 5):")
+    pprint.pprint(dict(list(scores.items())[:5]))
 
     if not scores:
+        print("\n[INFO] No documents matched the query. Returning empty response.")
         return SearchResponse(total=0, publications=[])
 
     # 2. Filter results by year
     doc_ids = list(scores.keys())
+    print(f"\n[STEP 2] Document IDs before year filtering: {len(doc_ids)} total")
+
     filtered_doc_ids = _filter_doc_ids_by_year(doc_ids, min_year, max_year)
+    print(f"[STEP 2] Document IDs AFTER year filtering: {len(filtered_doc_ids)} total")
 
     # 3. Sort by relevance score
     sorted_doc_ids = sorted(
@@ -271,14 +291,25 @@ async def search_publications(
         key=lambda doc_id: scores[doc_id],
         reverse=True
     )
+    print("\n[STEP 3] Sorted Document IDs (first 10):", sorted_doc_ids[:10])
 
     # 4. Paginate the results
     total_results = len(sorted_doc_ids)
     start_index = (page - 1) * page_size
     end_index = start_index + page_size
     paginated_ids = sorted_doc_ids[start_index:end_index]
+    print(f"\n[STEP 4] Pagination: Total Results={total_results}, Page={page}, Page Size={page_size}")
+    print("[STEP 4] Paginated IDs for this page:", paginated_ids)
 
     # 5. Retrieve full publication data and classify
     results = _get_classified_publications(paginated_ids)
+    print("\n[STEP 5] Final classified publications being returned (first result):")
+    if results:
+        pprint.pprint(results[0])
+    else:
+        print("[STEP 5] No results to return for this page.")
+
+    print("\n✅ REQUEST COMPLETE")
+    print("─" * 50)
 
     return SearchResponse(total=total_results, publications=results)

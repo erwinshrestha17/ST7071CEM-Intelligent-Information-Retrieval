@@ -13,6 +13,6 @@ export interface Publication {
   title: string;
   authors: string[];
   publicationYear: number;
-  publicationUrl: string;
+  publication_link: string;
   authorProfileUrl: string;
 }

@@ -4,6 +4,7 @@ import type {Publication} from "@/types/types.ts";
 import {Spinner} from "@/components/spinner.tsx";
 import {SearchIcon} from "lucide-react";
 import {searchPublications} from "@/services/information-retrival-service.ts";
+import {Button} from "@/components/ui/button.tsx";
 
 const SearchEngine: React.FC = () => {
   const [query, setQuery] = useState<string>('');
@@ -78,21 +79,32 @@ const SearchEngine: React.FC = () => {
           <div className="space-y-4">
             {results.map((pub, index) => (
               <div key={index} className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 hover:border-indigo-500 transition-all duration-300">
-                <h3 className="text-xl font-bold text-indigo-400">{pub.title}</h3>
+                <h3 className="text-xl font-bold text-indigo-400">
+                    <a href={pub.publication_link} target="_blank" rel="noopener noreferrer">
+                    {pub.title}
+                    </a>
+                </h3>
                 <p className="text-sm text-gray-400 mt-2">
                   <span className="font-semibold">Authors:</span> {pub.authors.join(', ')}
                 </p>
                 <p className="text-sm text-gray-400 mt-1">
                   <span className="font-semibold">Year:</span> {pub.publicationYear}
                 </p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  <a href={pub.publicationUrl} target="_blank" rel="noopener noreferrer" className="text-sm bg-gray-700 hover:bg-gray-600 text-indigo-300 font-medium py-2 px-4 rounded-md transition-colors">
-                    View Publication
-                  </a>
+            <div className="mt-4 flex flex-wrap gap-2">
+                  {/* Wrap the link in a Button component with the asChild prop */}
+                  <Button asChild>
+                      <a href={pub.publication_link} target="_blank" rel="noopener noreferrer">
+                      View Publication
+                    </a>
+                  </Button>
+
+                  {/* Do the same for the author profile link */}
                   {pub.authorProfileUrl && (
-                     <a href={pub.authorProfileUrl} target="_blank" rel="noopener noreferrer" className="text-sm bg-gray-700 hover:bg-gray-600 text-indigo-300 font-medium py-2 px-4 rounded-md transition-colors">
+                    <Button asChild variant="outline" className="text-indigo-400 hover:text-indigo-300">
+                      <a href={pub.authorProfileUrl} target="_blank" rel="noopener noreferrer">
                         View Author Profile
-                     </a>
+                      </a>
+                    </Button>
                   )}
                 </div>
               </div>
