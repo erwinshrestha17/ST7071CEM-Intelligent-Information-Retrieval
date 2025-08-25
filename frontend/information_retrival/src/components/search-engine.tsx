@@ -1,117 +1,188 @@
+// src/components/search-engine.tsx
 
-import React, { useState } from 'react';
-import type {Publication} from "@/types/types.ts";
-import {Spinner} from "@/components/spinner.tsx";
-import {SearchIcon} from "lucide-react";
-import {searchPublications} from "@/services/information-retrival-service.ts";
-import {Button} from "@/components/ui/button.tsx";
+import React, { useState, useMemo } from 'react';
+import { Loader2, ExternalLink } from "lucide-react";
+
+import { searchPublications } from '../services/information-retrival-service';
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import type { Publication } from "@/types/types.ts";
+
+const ITEMS_PER_PAGE = 10;
+const ABSTRACT_CHAR_LIMIT = 300; // A good character limit to approximate 5 lines
+
+// --- UI IMPROVEMENT: Helper function for dynamic badge colors based on score ---
+const getScoreBadgeVariant = (score: number | undefined | null): 'destructive' | 'secondary' | 'default' => {
+  if (score === null || score === undefined) return 'secondary';
+  if (score >= 0.8) return 'default';
+  if (score >= 0.5) return 'secondary';
+  return 'destructive';
+};
+
+// --- NEW: Extracted Card component for better state management ---
+interface PublicationCardProps {
+  publication: Publication;
+}
+
+const PublicationCard: React.FC<PublicationCardProps> = ({ publication: pub }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const isLongAbstract = pub.abstract && pub.abstract.length > ABSTRACT_CHAR_LIMIT;
+
+    const abstractText = isLongAbstract && !isExpanded
+      ? `${pub.abstract!.substring(0, ABSTRACT_CHAR_LIMIT)}...`
+      : pub.abstract;
+      return (
+    <Card className="hover:shadow-md transition-shadow duration-200">
+      <CardHeader>
+        <CardTitle className="text-lg">
+          {pub.publication_link ? (
+            <a href={pub.publication_link} target="_blank" rel="noopener noreferrer" className="text-sky-700 hover:underline">
+              {pub.title || 'No Title Available'}
+            </a>
+          ) : (
+            <span className="text-slate-900">{pub.title || 'No Title Available'}</span>
+          )}
+        </CardTitle>
+        <CardDescription>By {pub.authors?.join(', ') || 'N/A'}</CardDescription>
+      </CardHeader>
+      <CardContent>
+        {/* The whitespace-pre-line class respects newlines in the abstract text */}
+        <p className="text-sm text-slate-700 whitespace-pre-line">
+          {abstractText || 'No abstract available.'}
+        </p>
+        {isLongAbstract && (
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="text-sm font-semibold text-sky-700 hover:underline mt-2"
+          >
+            {isExpanded ? 'Show less' : 'Show more'}
+          </button>
+        )}
+      </CardContent>
+      <CardFooter className="flex flex-wrap justify-between items-center gap-4">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Badge variant="secondary">{pub.category || 'Unclassified'}</Badge>
+          <Badge variant={getScoreBadgeVariant(pub.relevanceScore)}>
+            Score: {pub.relevanceScore?.toFixed(3) || 'N/A'}
+          </Badge>
+        </div>
+        <Button asChild size="sm" disabled={!pub.publication_link}>
+          <a href={pub.publication_link || '#'} target="_blank" rel="noopener noreferrer">
+            View Publication
+            <ExternalLink className="ml-2 h-4 w-4" />
+          </a>
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+};
+
 
 const SearchEngine: React.FC = () => {
   const [query, setQuery] = useState<string>('');
-  const [results, setResults] = useState<Publication[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [allPublications, setAllPublications] = useState<Publication[]>([]);
+  const [, setTotalResults] = useState<number>(0);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [hasSearched, setHasSearched] = useState<boolean>(false);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!query.trim()) return;
+    if (!query.trim()) {
+      setError('Please enter a search query.');
+      return;
+    }
 
-    setIsLoading(true);
+    setLoading(true);
     setError(null);
     setHasSearched(true);
-    setResults([]);
+    setCurrentPage(1);
 
     try {
-      const response = await searchPublications(query);
-      setResults(response.publications);
-    } catch (err) {
-      setError('An error occurred while fetching search results. Please try again.');
+      const data = await searchPublications({ query });
+      setAllPublications(data.publications);
+      setTotalResults(data.total);
+    } catch (err: any) {
+      setError(err.message || 'An unexpected error occurred.');
+      setAllPublications([]);
+      setTotalResults(0);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  return (
-    <div className="space-y-8">
-      <div className="text-center">
-        <h2 className="text-3xl font-extrabold text-indigo-400">Publication Search Engine</h2>
-        <p className="mt-2 text-lg text-gray-400">Find publications from Coventry University's School of Economics, Finance and Accounting.</p>
-      </div>
+  const paginatedPublications = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return allPublications.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [allPublications, currentPage]);
 
-      <form onSubmit={handleSearch} className="flex items-center gap-2 bg-gray-800 p-2 rounded-lg shadow-md max-w-2xl mx-auto">
-        <div className="relative flex-grow">
-          <input
+  const totalPages = Math.ceil(allPublications.length / ITEMS_PER_PAGE);
+
+  return (
+    // --- UI IMPROVEMENT: Added a subtle background color to make cards stand out ---
+    <div className="container mx-auto max-w-4xl p-4 sm:p-6 lg:p-8 bg-slate-50 min-h-screen">
+      <header className="text-center mb-8">
+        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">Publication Search Engine</h1>
+        <p className="text-slate-600 mt-2">Discover academic publications with ease.</p>
+      </header>
+
+      <form onSubmit={handleSearch} className="flex flex-col gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row gap-2">
+          <Input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="e.g., 'financial risk management'"
-            className="w-full bg-gray-700 text-white placeholder-gray-400 px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-shadow"
+            placeholder="Search for publications..."
+            className="flex-grow text-base text-black" // --- UI IMPROVEMENT: Slightly larger text ---
           />
+          <Button type="submit" disabled={loading} className="w-full sm:w-auto">
+            {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            Search
+          </Button>
         </div>
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="flex items-center justify-center bg-indigo-600 hover:bg-indigo-700 disabled:bg-indigo-400 text-white font-bold py-3 px-6 rounded-md transition-colors duration-200"
-        >
-          {isLoading ? <Spinner /> : <SearchIcon className="h-5 w-5" />}
-          <span className="hidden sm:inline ml-2">Search</span>
-        </button>
       </form>
 
-      <div className="mt-8">
-        {isLoading && (
-          <div className="flex justify-center items-center flex-col text-center">
-            <Spinner />
-            <p className="mt-4 text-gray-400">Searching for publications...</p>
-          </div>
-        )}
-        {error && <p className="text-center text-red-400 bg-red-900/30 p-4 rounded-md">{error}</p>}
+      {error && <p className="text-destructive text-center mb-4">{error}</p>}
 
-        {!isLoading && hasSearched && results.length === 0 && !error && (
-            <div className="text-center text-gray-500 py-10">
-                <h3 className="text-xl font-semibold">No Results Found</h3>
-                <p>Try searching for a different keyword.</p>
-            </div>
-        )}
+      {hasSearched && !loading && (
+        <div className="flex justify-between items-center mb-6">
+          <p className="text-sm text-slate-600">
+            Showing <strong>{allPublications.length}</strong> results.
+          </p>
+        </div>
+      )}
 
-        {results.length > 0 && (
-          <div className="space-y-4">
-            {results.map((pub, index) => (
-              <div key={index} className="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700 hover:border-indigo-500 transition-all duration-300">
-                <h3 className="text-xl font-bold text-indigo-400">
-                    <a href={pub.publication_link} target="_blank" rel="noopener noreferrer">
-                    {pub.title}
-                    </a>
-                </h3>
-                <p className="text-sm text-gray-400 mt-2">
-                  <span className="font-semibold">Authors:</span> {pub.authors.join(', ')}
-                </p>
-                <p className="text-sm text-gray-400 mt-1">
-                  <span className="font-semibold">Year:</span> {pub.publicationYear}
-                </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-                  {/* Wrap the link in a Button component with the asChild prop */}
-                  <Button asChild>
-                      <a href={pub.publication_link} target="_blank" rel="noopener noreferrer">
-                      View Publication
-                    </a>
-                  </Button>
+      {loading ? (
+        <div className="flex justify-center items-center py-12">
+          <Loader2 className="h-10 w-10 animate-spin text-slate-400" />
+        </div>
+      ) : paginatedPublications.length > 0 ? (
+        <div className="space-y-4">
+          {paginatedPublications.map((pub, index) => (
+            // --- MODIFIED: Using the new PublicationCard component ---
+            <PublicationCard key={index} publication={pub} />
+          ))}
+        </div>
+      ) : hasSearched && (
+        <p className="text-center text-slate-500 py-12">No publications found for your query.</p>
+      )}
 
-                  {/* Do the same for the author profile link */}
-                  {pub.authorProfileUrl && (
-                    <Button asChild variant="outline" className="text-indigo-400 hover:text-indigo-300">
-                      <a href={pub.authorProfileUrl} target="_blank" rel="noopener noreferrer">
-                        View Author Profile
-                      </a>
-                    </Button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      {totalPages > 1 && (
+        <div className="flex items-center justify-center gap-4 mt-8">
+          <Button variant="outline" onClick={() => setCurrentPage(p => p - 1)} disabled={currentPage === 1}>
+            Previous
+          </Button>
+          <span className="text-sm font-medium text-slate-700">Page {currentPage} of {totalPages}</span>
+          <Button variant="outline" onClick={() => setCurrentPage(p => p + 1)} disabled={currentPage >= totalPages}>
+            Next
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

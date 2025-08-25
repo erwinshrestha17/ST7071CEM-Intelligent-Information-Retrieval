@@ -1,12 +1,17 @@
+// document-classifier.tsx
+
 import React, { useState } from 'react';
 import { classifyDocument } from "@/services/information-retrival-service.ts";
 import { ClassifierIcon } from "@/components/icons/classifier-icon.tsx";
-import { Spinner } from "@/components/spinner.tsx";
+// --- UI IMPROVEMENT: Using consistent components from a UI library ---
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Card, CardContent } from "@/components/ui/card";
 
 const DocumentClassifier: React.FC = () => {
   const [text, setText] = useState<string>('');
   const [result, setResult] = useState<string | null>(null);
-  // --- MODIFIED: Store confidence as a number for calculations ---
   const [classificationConfidence, setClassificationConfidence] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -20,10 +25,8 @@ const DocumentClassifier: React.FC = () => {
     setClassificationConfidence(null);
 
     try {
-      // --- MODIFIED: Destructure the object returned from the service ---
       const { category, confidence } = await classifyDocument(text);
       setResult(category);
-      // Store the confidence score
       setClassificationConfidence(confidence);
     } catch (err) {
       setError('An error occurred during classification. Please try again.');
@@ -32,68 +35,74 @@ const DocumentClassifier: React.FC = () => {
     }
   };
 
-  const getResultColor = (category: string | null) => {
+  // --- UI IMPROVEMENT: New color function for light-themed result badges ---
+  const getResultClasses = (category: string | null): string => {
     switch(category?.toLowerCase()) {
         case 'business':
-            return 'bg-blue-900/50 text-blue-300 border-blue-500';
+            return 'bg-blue-100 text-blue-800 border-blue-200';
         case 'health':
-            return 'bg-green-900/50 text-green-300 border-green-500';
+            return 'bg-green-100 text-green-800 border-green-200';
         case 'politics':
-            return 'bg-purple-900/50 text-purple-300 border-purple-500';
+            return 'bg-purple-100 text-purple-800 border-purple-200';
         default:
-            return 'bg-gray-700 text-gray-300 border-gray-600';
+            return 'bg-slate-100 text-slate-800 border-slate-200';
     }
   }
 
   return (
-    <div className="space-y-8">
+    // --- UI IMPROVEMENT: Added standard padding and a subtle background ---
+    <div className="space-y-8 p-4 sm:p-6 lg:p-8 bg-slate-50 min-h-screen">
       <div className="text-center">
-        <h2 className="text-3xl font-extrabold text-teal-400">Document Classifier</h2>
-        <p className="mt-2 text-lg text-gray-400">Classify text into Business, Health, or Politics categories.</p>
+        <h2 className="text-3xl font-bold text-sky-600">Document Classifier</h2>
+        <p className="mt-2 text-lg text-slate-600">Classify text into Business, Health, or Politics categories.</p>
       </div>
 
-      <div className="bg-gray-800 p-4 rounded-lg shadow-md max-w-2xl mx-auto space-y-4">
-        <textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder="Enter or paste text here to classify..."
-          className="w-full h-48 bg-gray-700 text-white placeholder-gray-400 p-4 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition-shadow"
-          rows={8}
-        />
-        <button
-          onClick={handleClassify}
-          disabled={isLoading}
-          className="w-full flex items-center justify-center bg-teal-600 hover:bg-teal-700 disabled:bg-teal-400 text-white font-bold py-3 px-6 rounded-md transition-colors duration-200"
-        >
-          {isLoading ? <Spinner /> : <ClassifierIcon className="h-5 w-5" />}
-          <span className="ml-2">Classify Text</span>
-        </button>
-      </div>
+      {/* --- UI IMPROVEMENT: Using a Card component for better structure --- */}
+      <Card className="max-w-2xl mx-auto">
+        <CardContent className="p-6 space-y-4">
+          <Textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder="Enter or paste text here to classify..."
+            className="w-full h-48 text-base"
+            rows={8}
+          />
+          <Button
+            onClick={handleClassify}
+            disabled={isLoading || !text.trim()}
+            className="w-full"
+          >
+            {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <ClassifierIcon className="mr-2 h-5 w-5" />}
+            <span>Classify Text</span>
+          </Button>
+        </CardContent>
+      </Card>
 
       <div className="mt-8 max-w-2xl mx-auto">
         {isLoading && (
           <div className="flex justify-center items-center flex-col text-center">
-            <Spinner />
-            <p className="mt-4 text-gray-400">Analyzing document...</p>
+            <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
+            <p className="mt-4 text-slate-500">Analyzing document...</p>
           </div>
         )}
-        {error && <p className="text-center text-red-400 bg-red-900/30 p-4 rounded-md">{error}</p>}
+        {error && <p className="text-center text-destructive bg-red-100 p-4 rounded-md">{error}</p>}
         {result && classificationConfidence !== null && (
-          <div className="text-center space-y-6">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-300 mb-2">Classification Result:</h3>
-              <p className={`text-2xl font-bold py-4 px-6 rounded-lg inline-block border ${getResultColor(result)}`}>
-                {result}
-              </p>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-gray-300 mb-2">Confidence Score:</h3>
-              {/* --- MODIFIED: Format the confidence score correctly as a percentage --- */}
-              <p className={`text-2xl font-bold py-4 px-6 rounded-lg inline-block border ${getResultColor(result)}`}>
-                {(classificationConfidence * 100).toFixed(2)}%
-              </p>
-            </div>
-          </div>
+          <Card className="text-center">
+            <CardContent className="p-6 space-y-6">
+              <div>
+                <h3 className="text-lg font-semibold text-slate-800 mb-2">Classification Result:</h3>
+                <p className={`text-2xl font-bold py-3 px-5 rounded-lg inline-block border ${getResultClasses(result)}`}>
+                  {result}
+                </p>
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-slate-800 mb-2">Confidence Score:</h3>
+                <p className={`text-2xl font-bold py-3 px-5 rounded-lg inline-block border ${getResultClasses(result)}`}>
+                  {(classificationConfidence * 100).toFixed(2)}%
+                </p>
+              </div>
+            </CardContent>
+          </Card>
         )}
       </div>
     </div>

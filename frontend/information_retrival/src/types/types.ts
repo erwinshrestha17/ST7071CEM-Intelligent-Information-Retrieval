@@ -1,6 +1,4 @@
-// src/types/types.ts
-
-// The type definition (erasable)
+// src/types.ts
 export type Page = 'SearchEngine' | 'DocumentClassifier';
 
 // The values (a plain JS object)
@@ -10,9 +8,22 @@ export const Page = {
 } as const;
 
 export interface Publication {
-  title: string;
-  authors: string[];
-  publicationYear: number;
-  publication_link: string;
-  authorProfileUrl: string;
+  title?: string | null;
+  authors?: string[] | null;
+  date: string | null;
+  abstract: string | null;
+  publication: string | null;
+  publicationYear: number | null;
+  category: string | null;
+  publication_link: string | null;
+  relevanceScore: number | null;
+}
+
+export interface SearchResponse {
+  total: number;
+  publications: Publication[];
+}
+
+export interface SearchParams {
+  query: string;
 }

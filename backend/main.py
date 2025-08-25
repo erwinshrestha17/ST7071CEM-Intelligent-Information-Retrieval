@@ -138,6 +138,7 @@ class Publication(BaseModel):
     publicationYear: Optional[int] = None
     category: Optional[str] = None
     publicationUrl: Optional[str] = Field(None, alias='publication_link')
+    relevanceScore: Optional[float] = None
 
 
 class SearchResponse(BaseModel):
@@ -191,13 +192,17 @@ def _filter_doc_ids_by_year(
     return filtered_ids
 
 
-def _get_classified_publications(doc_ids: List[str]) -> List[dict]:
+def _get_classified_publications(
+    doc_ids: List[str],
+    scores: DefaultDict[str, float]
+) -> List[dict]:
     """Retrieves and classifies full publication data for a list of IDs."""
     results = []
     for doc_id in doc_ids:
         try:
-            doc = document_store[int(doc_id)]
-
+            # Create a copy to avoid modifying the global document_store
+            doc = document_store[int(doc_id)].copy()
+            doc['relevanceScore'] = scores.get(doc_id, 0.0)
             text_to_classify = (doc.get('title', '') + ' ' + doc.get('abstract', '')).strip()
 
             if classifier and vectorizer and text_to_classify:
@@ -243,24 +248,22 @@ async def classify_text(request: ClassificationRequest):
         raise HTTPException(status_code=500, detail=f"Classification error: {e}")
 
 
-
-
 @app.post("/api/search", response_model=SearchResponse)
 async def search_publications(
         request: SearchRequest,
-        page: int = 1, page_size: int = Query(10, ge=1, le=100),
-        min_year: Optional[int] = None, max_year: Optional[int] = None
+        # MODIFIED: Removed page and page_size parameters
+        min_year: Optional[int] = None,
+        max_year: Optional[int] = None
 ):
     """
     Searches publications based on a query, filters by year,
-    and returns paginated, classified results.
+    and returns all matching, classified results.
     """
     print("─" * 50)
     print("🚀 NEW SEARCH REQUEST RECEIVED 🚀")
 
-    # --- Inspect Initial Inputs ---
     print("\n[INPUT] Request Body (SearchRequest):", request)
-    print(f"[INPUT] Query Parameters: page={page}, page_size={page_size}, min_year={min_year}, max_year={max_year}")
+    print(f"[INPUT] Query Parameters: min_year={min_year}, max_year={max_year}")
 
     if not index_data or not document_store:
         raise HTTPException(status_code=503, detail="Search index is not available.")
@@ -268,9 +271,7 @@ async def search_publications(
     # 1. Process query and calculate scores
     query_tokens = preprocess_for_search(request.query)
     print("\n[STEP 1] Preprocessed Query Tokens:", query_tokens)
-
     scores = _calculate_tf_idf_scores(query_tokens)
-    # Using pprint for better readability of large dictionaries
     print("\n[STEP 1] Calculated TF-IDF Scores (first 5):")
     pprint.pprint(dict(list(scores.items())[:5]))
 
@@ -281,7 +282,6 @@ async def search_publications(
     # 2. Filter results by year
     doc_ids = list(scores.keys())
     print(f"\n[STEP 2] Document IDs before year filtering: {len(doc_ids)} total")
-
     filtered_doc_ids = _filter_doc_ids_by_year(doc_ids, min_year, max_year)
     print(f"[STEP 2] Document IDs AFTER year filtering: {len(filtered_doc_ids)} total")
 
@@ -293,21 +293,17 @@ async def search_publications(
     )
     print("\n[STEP 3] Sorted Document IDs (first 10):", sorted_doc_ids[:10])
 
-    # 4. Paginate the results
+    # 4. MODIFIED: Pagination is removed. All results will be returned.
     total_results = len(sorted_doc_ids)
-    start_index = (page - 1) * page_size
-    end_index = start_index + page_size
-    paginated_ids = sorted_doc_ids[start_index:end_index]
-    print(f"\n[STEP 4] Pagination: Total Results={total_results}, Page={page}, Page Size={page_size}")
-    print("[STEP 4] Paginated IDs for this page:", paginated_ids)
+    print(f"\n[STEP 4] Found {total_results} total matching results. Returning all.")
 
-    # 5. Retrieve full publication data and classify
-    results = _get_classified_publications(paginated_ids)
+    # 5. Retrieve full publication data for ALL sorted IDs and classify
+    results = _get_classified_publications(sorted_doc_ids, scores)
     print("\n[STEP 5] Final classified publications being returned (first result):")
     if results:
         pprint.pprint(results[0])
     else:
-        print("[STEP 5] No results to return for this page.")
+        print("[STEP 5] No results to return.")
 
     print("\n✅ REQUEST COMPLETE")
     print("─" * 50)
