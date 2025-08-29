@@ -3,20 +3,15 @@ import pickle
 from pathlib import Path
 import matplotlib.pyplot as plt
 import seaborn as sns
-from sklearn.feature_extraction.text import TfidfVectorizer
-# MODIFICATION: Added cross_val_score for robust evaluation
-from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split, GridSearchCV, cross_val_score
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
-
-# Assuming classification_preprocessing.py is in the same directory or accessible
 from classification_preprocessing import preprocess_text
 
 
 def load_labeled_data(file_path):
-    """
-    Loads documents and labels from the JSON file.
-    """
+
     file_path = Path(file_path)
     print(f"Loading labeled data from {file_path}...")
     if not file_path.exists():
@@ -78,7 +73,6 @@ def main():
 
     # --- Step 3: Vectorize Data ---
     print("Vectorizing data using TF-IDF...")
-    # MODIFICATION: Tuned TF-IDF with min_df and max_df to filter noise
     tfidf_vectorizer = TfidfVectorizer(
         max_features=2000,
         ngram_range=(1, 2),
@@ -117,9 +111,7 @@ def main():
 
     plot_confusion_matrix(cm, class_labels)
 
-    # MODIFICATION: Implement More Robust Evaluation with Cross-Validation
     print("\n--- Running Final Cross-Validation for Robustness Check ---")
-    # Use the entire dataset (X, y) and the best model from GridSearchCV
     scores = cross_val_score(best_classifier, X, y, cv=5, scoring='accuracy')
     print(f"Cross-validation accuracy scores: {scores}")
     print(f"Average CV Accuracy: {scores.mean():.2f} (+/- {scores.std() * 2:.2f})")

@@ -2,6 +2,8 @@ import json
 import csv
 import pickle
 import numpy as np
+import time
+import uuid
 from typing import List, Optional, DefaultDict
 from fastapi import FastAPI, Query, HTTPException
 from pydantic import BaseModel, Field, ConfigDict
@@ -10,21 +12,25 @@ from collections import defaultdict
 from datetime import datetime
 import traceback
 from pathlib import Path
-import pprint
 
 # --- Local Module Imports ---
-# Make sure you have these files and they are correctly referenced
-# For this example, we'll assume placeholder paths if they don't exist.
+import sys
+from pathlib import Path
+
+project_root = Path(__file__).resolve().parent.parent
+sys.path.append(str(project_root))
+
 try:
     from backend.config import INDEX_FILE, PUBLICATIONS_FILE
     from backend.crawling.crawler_preprocessing import preprocess_text as preprocess_for_search
     from backend.classification.classification_preprocessing import preprocess_text as preprocess_for_classification
-except ImportError:
-    # Define dummy functions and paths if the modules are not found,
-    # allowing the server to start for inspection.
-    print("Warning: Local modules not found. Using placeholder functions and paths.")
-    INDEX_FILE = "index.json"
-    PUBLICATIONS_FILE = "publications.csv"
+    print("✅ Successfully imported local backend modules.")
+
+except ImportError as e:
+    print("❌ FATAL ERROR: Could not import local backend modules.")
+    print(f"   -> Error details: {e}")
+    print(f"   -> Ensure you are running the server from the project's root directory.")
+    raise
 
 
     def preprocess_for_search(text: str) -> List[str]:
@@ -39,7 +45,7 @@ app = FastAPI(title="Publication Search API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173"],  # Adjust for your frontend port
+    allow_origins=["http://localhost:3000", "http://localhost:5173"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -71,7 +77,6 @@ async def startup_event_handler():
         with open(PUBLICATIONS_FILE, 'r', encoding='utf-8') as f:
             reader = csv.DictReader(f)
             for row in reader:
-                # Clean up author data
                 try:
                     authors_str = row.get('authors', '[]')
                     authors_data = json.loads(authors_str)
@@ -147,7 +152,7 @@ class SearchResponse(BaseModel):
 
 
 class ClassificationRequest(BaseModel):
-    text: str = Field(..., min_length=10, description="Text to be classified.")
+    text: str = Field(..., min_length=3, description="Text to be classified.")
 
 
 class ClassificationResponse(BaseModel):
@@ -169,32 +174,9 @@ def _calculate_tf_idf_scores(query_tokens: List[str]) -> DefaultDict[str, float]
     return scores
 
 
-def _filter_doc_ids_by_year(
-        doc_ids: List[str],
-        min_year: Optional[int],
-        max_year: Optional[int]
-) -> List[str]:
-    """Filters a list of document IDs based on a year range."""
-    if not min_year and not max_year:
-        return doc_ids
-
-    filtered_ids = []
-    for doc_id in doc_ids:
-        meta = document_metadata.get(doc_id)
-        if not meta or meta.get('year') is None:
-            continue
-
-        pub_year = meta['year']
-        if (min_year and pub_year < min_year) or (max_year and pub_year > max_year):
-            continue
-
-        filtered_ids.append(doc_id)
-    return filtered_ids
-
-
 def _get_classified_publications(
-    doc_ids: List[str],
-    scores: DefaultDict[str, float]
+        doc_ids: List[str],
+        scores: DefaultDict[str, float]
 ) -> List[dict]:
     """Retrieves and classifies full publication data for a list of IDs."""
     results = []
@@ -230,82 +212,129 @@ def read_root():
 @app.post("/api/classify", response_model=ClassificationResponse)
 async def classify_text(request: ClassificationRequest):
     """Classifies the given text into a predefined category."""
+    # --- Enhanced Logging Setup ---
+    request_id = str(uuid.uuid4())[:8]
+    start_time = time.time()
+
+    def log(message: str):
+        # Helper to prepend timestamp and request ID to each log line
+        print(f"[{datetime.now().isoformat(sep=' ', timespec='milliseconds')}] [Request-ID: {request_id}] {message}")
+
+    log("─" * 50)
+    log("🚀 NEW CLASSIFICATION REQUEST RECEIVED 🚀")
+
+    text_snippet = (request.text[:100] + '...') if len(request.text) > 100 else request.text
+    log(f"Input text (snippet): '{text_snippet}'")
+
     if not classifier or not vectorizer:
+        log("[ERROR] Classifier or vectorizer not available.")
         raise HTTPException(status_code=503, detail="Classifier is not available.")
 
     try:
+        # 1. Preprocess Text
+        step1_start = time.time()
         processed_text = preprocess_for_classification(request.text)
+        step1_duration = time.time() - step1_start
+        log(f"[STEP 1] Preprocessed text in {step1_duration:.4f} seconds.")
+
+        # 2. Vectorize and Predict
+        step2_start = time.time()
         vectorized_text = vectorizer.transform([processed_text])
         predicted_category = classifier.predict(vectorized_text)[0]
         probabilities = classifier.predict_proba(vectorized_text)[0]
         confidence = float(np.max(probabilities))
+        step2_duration = time.time() - step2_start
+        log(f"[STEP 2] Vectorized and predicted category in {step2_duration:.4f} seconds.")
+        log(f"  -> Predicted Category: {predicted_category}")
+        log(f"  -> Confidence Score: {confidence:.4f}")
 
-        return ClassificationResponse(
+        response = ClassificationResponse(
             predicted_category=predicted_category,
             confidence_score=confidence
         )
+
+        total_duration = time.time() - start_time
+        log(f"✅ REQUEST COMPLETE in {total_duration:.4f} seconds.")
+        log("─" * 50)
+
+        return response
+
     except Exception as e:
+        total_duration = time.time() - start_time
+        log(f"[FATAL] An unexpected error occurred after {total_duration:.4f} seconds: {e}")
+        log("─" * 50)
         raise HTTPException(status_code=500, detail=f"Classification error: {e}")
 
 
 @app.post("/api/search", response_model=SearchResponse)
-async def search_publications(
-        request: SearchRequest,
-        # MODIFIED: Removed page and page_size parameters
-        min_year: Optional[int] = None,
-        max_year: Optional[int] = None
-):
+async def search_publications(request: SearchRequest):
     """
-    Searches publications based on a query, filters by year,
-    and returns all matching, classified results.
+    Searches publications based on a query and returns all matching,
+    classified results.
     """
-    print("─" * 50)
-    print("🚀 NEW SEARCH REQUEST RECEIVED 🚀")
+    # --- Enhanced Logging Setup ---
+    request_id = str(uuid.uuid4())[:8]  # Short UUID for readability
+    start_time = time.time()
 
-    print("\n[INPUT] Request Body (SearchRequest):", request)
-    print(f"[INPUT] Query Parameters: min_year={min_year}, max_year={max_year}")
+    def log(message: str):
+        # Helper to prepend timestamp and request ID to each log line
+        print(f"[{datetime.now().isoformat(sep=' ', timespec='milliseconds')}] [Request-ID: {request_id}] {message}")
+
+    log("─" * 50)
+    log("🚀 NEW SEARCH REQUEST RECEIVED 🚀")
+    log(f"Query: '{request.query}'")
 
     if not index_data or not document_store:
         raise HTTPException(status_code=503, detail="Search index is not available.")
 
     # 1. Process query and calculate scores
+    step1_start = time.time()
     query_tokens = preprocess_for_search(request.query)
-    print("\n[STEP 1] Preprocessed Query Tokens:", query_tokens)
+    log(f"[STEP 1] Preprocessed Query Tokens: {query_tokens}")
     scores = _calculate_tf_idf_scores(query_tokens)
-    print("\n[STEP 1] Calculated TF-IDF Scores (first 5):")
-    pprint.pprint(dict(list(scores.items())[:5]))
+    step1_duration = time.time() - step1_start
+    log(f"[STEP 1] Calculated TF-IDF scores for {len(scores)} documents in {step1_duration:.4f} seconds.")
 
     if not scores:
-        print("\n[INFO] No documents matched the query. Returning empty response.")
+        log("[INFO] No documents matched the query. Returning empty response.")
+        total_duration = time.time() - start_time
+        log(f"✅ REQUEST COMPLETE (No Results) in {total_duration:.4f} seconds.")
+        log("─" * 50)
         return SearchResponse(total=0, publications=[])
 
-    # 2. Filter results by year
+    # 2. Sort by relevance score
+    step2_start = time.time()
     doc_ids = list(scores.keys())
-    print(f"\n[STEP 2] Document IDs before year filtering: {len(doc_ids)} total")
-    filtered_doc_ids = _filter_doc_ids_by_year(doc_ids, min_year, max_year)
-    print(f"[STEP 2] Document IDs AFTER year filtering: {len(filtered_doc_ids)} total")
-
-    # 3. Sort by relevance score
     sorted_doc_ids = sorted(
-        filtered_doc_ids,
+        doc_ids,
         key=lambda doc_id: scores[doc_id],
         reverse=True
     )
-    print("\n[STEP 3] Sorted Document IDs (first 10):", sorted_doc_ids[:10])
+    step2_duration = time.time() - step2_start
+    log(f"[STEP 2] Sorted {len(sorted_doc_ids)} document IDs in {step2_duration:.4f} seconds.")
+    if sorted_doc_ids:
+        top_doc_id = sorted_doc_ids[0]
+        log(f"[STEP 2] Top result ID: {top_doc_id} with score: {scores[top_doc_id]:.4f}")
 
-    # 4. MODIFIED: Pagination is removed. All results will be returned.
+    # 3. Retrieve and classify publications
+    step3_start = time.time()
     total_results = len(sorted_doc_ids)
-    print(f"\n[STEP 4] Found {total_results} total matching results. Returning all.")
-
-    # 5. Retrieve full publication data for ALL sorted IDs and classify
+    log(f"[STEP 3] Retrieving and classifying {total_results} documents.")
     results = _get_classified_publications(sorted_doc_ids, scores)
-    print("\n[STEP 5] Final classified publications being returned (first result):")
-    if results:
-        pprint.pprint(results[0])
-    else:
-        print("[STEP 5] No results to return.")
+    step3_duration = time.time() - step3_start
+    log(f"[STEP 3] Retrieved and classified all documents in {step3_duration:.4f} seconds.")
 
-    print("\n✅ REQUEST COMPLETE")
-    print("─" * 50)
+    if results:
+        log("[INFO] Sample of the first result being returned:")
+        first_res = results[0]
+        log(f"  -> Title: {first_res.get('title', 'N/A')[:70]}...")
+        log(f"  -> Category: {first_res.get('category', 'N/A')}")
+        log(f"  -> Score: {first_res.get('relevanceScore', 0.0):.4f}")
+    else:
+        log("[INFO] No full documents could be retrieved despite matching scores.")
+
+    total_duration = time.time() - start_time
+    log(f"✅ REQUEST COMPLETE in {total_duration:.4f} seconds.")
+    log("─" * 50)
 
     return SearchResponse(total=total_results, publications=results)

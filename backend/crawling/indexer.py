@@ -13,9 +13,7 @@ from crawler_preprocessing import preprocess_text
 
 
 def build_index():
-    """
-    Builds an enhanced inverted index from a CSV file of documents.
-    """
+
     try:
         document_store = []
         with open(PUBLICATIONS_FILE, 'r', encoding='utf-8') as f:
@@ -78,7 +76,6 @@ def build_index():
         pub_year = None
         date_str = document.get('date', '').strip()
 
-        # MODIFICATION: Standardize "Sept" to "Sep" before parsing
         date_str = date_str.replace('Sept', 'Sep')
 
         if date_str:

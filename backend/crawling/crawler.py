@@ -27,8 +27,6 @@ def setup_driver():
     """Sets up a headless Chrome browser instance using Selenium and webdriver_manager."""
     print("Setting up the headless Chrome browser...")
     chrome_options = ChromeOptions()
-    # The new standard for headless mode. Use this instead of '--headless'.
-    # To see the browser window, remove the '#' from the line below.
     chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
@@ -45,7 +43,6 @@ def setup_driver():
         return None
 
 
-# --- New function to fetch authors ---
 def fetch_authors(soup, base_url):
     authors_data = []
     persons_p = soup.select_one('p.relations.persons')
@@ -68,19 +65,16 @@ def fetch_authors(soup, base_url):
 
 # --- Extract abstract content from publication url ---
 def fetch_abstract(soup):
-    # Find the specific div containing the abstract
     abstract_div = soup.find('div', class_='rendering_researchoutput_abstractportal')
     if abstract_div:
-        # The text is within a nested 'textblock' div
         text_block = abstract_div.find('div', class_='textblock')
         if text_block:
             return text_block.get_text(strip=True)
-    return ''  # Return empty string if abstract is not found
+    return ''
 
 
 # --- Scrape details from a single publication page ---
 def scrape_publication_details(driver, url, title_from_list):
-    """Scrapes authors and abstract from a single publication page."""
     try:
         driver.get(url)
         WebDriverWait(driver, 10).until(
@@ -88,20 +82,16 @@ def scrape_publication_details(driver, url, title_from_list):
 
         soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-        # Use the title scraped from the list page
         title = title_from_list
         authors, date, abstract = [], 'N/A', ''
 
-        # Scrape authors
         try:
             authors = fetch_authors(soup, BASE_URL)
         except Exception as e:
             print(f"Could not find authors on {url}: {e}")
 
-        # Scrape abstract
         abstract = fetch_abstract(soup)
 
-        # Scrape date
         date_tag = soup.find('span', class_='date')
         date = date_tag.text.strip() if date_tag else 'N/A'
 
@@ -114,9 +104,7 @@ def scrape_publication_details(driver, url, title_from_list):
 
 # --- Crawler Core ---
 def crawl_pureportal(driver, start_url):
-    """
-    Crawls the Pureportal page, fetches publication links and titles, and then scrapes details.
-    """
+
     print(f"Starting crawl from: {start_url}")
     publications_data = []
     try:

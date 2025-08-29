@@ -65,7 +65,7 @@ const PublicationCard: React.FC<PublicationCardProps> = ({ publication: pub }) =
       </CardContent>
       <CardFooter className="flex flex-wrap justify-between items-center gap-4">
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <Badge variant="secondary">{pub.category || 'Unclassified'}</Badge>
+
           <Badge variant={getScoreBadgeVariant(pub.relevanceScore)}>
             Score: {pub.relevanceScore?.toFixed(3) || 'N/A'}
           </Badge>

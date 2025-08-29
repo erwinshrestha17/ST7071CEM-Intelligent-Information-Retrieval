@@ -14,7 +14,7 @@ export interface Publication {
   abstract: string | null;
   publication: string | null;
   publicationYear: number | null;
-  category: string | null;
+
   publication_link: string | null;
   relevanceScore: number | null;
 }
